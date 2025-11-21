@@ -1,10 +1,6 @@
-import { InferenceClient  } from "@huggingface/inference";
 import { LogEvent } from "./parser";
 import { Anomaly } from "./anomaly";
-import dotenv from "dotenv";
-dotenv.config();
-
-const hf = new InferenceClient(process.env.ML_TOKEN!);
+import { generateAiResponse } from "../utils/ai_model";
 
 export async function generateStory(
   events: LogEvent[],
@@ -34,11 +30,7 @@ Explain:
 4. What is the root cause?
 5. How to fix or mitigate it?
 `;
-
-  const response = await hf.chatCompletion({
-    model: "meta-llama/Llama-3.1-8B-Instruct",
-    messages: [{ role: "user", content: prompt }],
-  });
-
-  return response.choices[0].message.content?.toString() || "";
+console.log(anomalies,events);
+    const story = await generateAiResponse(prompt);
+    return story;
 }
