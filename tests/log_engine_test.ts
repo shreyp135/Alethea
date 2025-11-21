@@ -17,6 +17,9 @@ async function runDemo() {
   console.log("\n==== Detected Anomalies ====");
   console.log(anomalies);
 
+  console.log("\n==== Timeline ===="); 
+  console.log(timeline);
+
   console.log("\n==== Generating Story ====\n");
   const story = await generateStory(events, anomalies);
 
