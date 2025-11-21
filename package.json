@@ -1,6 +1,7 @@
 {
   "name": "alethea",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "homepage": "https://github.com/shreyp135/Alethea#readme",
   "bugs": {
@@ -11,7 +12,7 @@
     "url": "git+https://github.com/shreyp135/Alethea.git"
   },
   "license": "ISC",
-  "author": "",
+  "author": "shreyp135",
   "main": "index.js",
   "directories": {
     "doc": "docs"
@@ -27,6 +28,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "nodemon": "^3.1.11",
+    "octokit": "^5.0.5",
     "openai": "^6.9.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
@@ -35,6 +37,7 @@
     "@types/body-parser": "^1.19.6",
     "@types/express": "^5.0.5",
     "@types/node": "^24.10.1",
-    "@types/yaml": "^1.9.6"
+    "@types/yaml": "^1.9.6",
+    "tsx": "^4.20.6"
   }
 }
