@@ -1,0 +1,5 @@
+2025-01-12T10:14:01Z ERROR [auth] DBConnPool exhausted
+2025-01-12T10:14:02Z ERROR [auth] DBConnPool exhausted
+2025-01-12T10:14:03Z WARN  [api] retrying operation
+2025-01-12T10:14:05Z ERROR [api] timeout on /login
+2025-01-12T10:14:09Z ERROR [api] retry storm detected
