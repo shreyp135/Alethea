@@ -12,7 +12,7 @@ Text:
 ${text}
 `;
   const response: any = await generateAiResponse(prompt);
-  const raw = response.choices[0].message.content.trim() || "";
+  const raw = response;
 
   try {
     const vector = JSON.parse(raw);

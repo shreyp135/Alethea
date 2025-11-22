@@ -9,5 +9,5 @@ Text:
 ${text}
 `;
     const response: any = await generateAiResponse(prompt);
-    return response.choices[0].message.content.trim() || "";
+    return response;
 }

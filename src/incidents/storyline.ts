@@ -21,5 +21,5 @@ Write the story as:
 - Final impact
 `;
     const response: any = await generateAiResponse(prompt);
-    return response.choices[0].message.content.trim() || "";
+    return response;
 }
