@@ -2,3 +2,6 @@
 - to run any file use `tsx <filename or path>` rather than node or ts-node due to esm module configurations
 
 - to use local host on the web use localtunnel package
+- ```
+    import { initMongo } from "./memory/mongo.js";
+    await initMongo();```
