@@ -1,1 +1,0 @@
-console.log("check src/index.ts");
