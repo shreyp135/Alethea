@@ -1,4 +1,4 @@
-import { memoryClient } from "./mongodb";
+import { memoryClient } from "../utils/mongodb";
 import { getEmbedding } from "./embedder";
 import { v4 as uuid } from "uuid";
 import { generateSummary } from "src/utils/summarize_text";

@@ -15,6 +15,10 @@ export function groupEvents(events: LogEvent[]): LogEvent[][] {
     }
 
     const prev = events[i - 1];
+    if (evt.timestamp === null || prev.timestamp === null) {
+      current.push(evt);
+      continue;
+    }
     const gap = evt.timestamp.getTime() - prev.timestamp.getTime();
 
     if (gap > TIME_GAP_MS) {

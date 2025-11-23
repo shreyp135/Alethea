@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // --- IMPORT YOUR MODULES ---
-import { connectToMongo } from "../src/memory/mongodb";
+import { connectToMongo } from "../src/utils/mongodb";
 import { generateSummary } from "../src/utils/summarize_text";
 import { getEmbedding } from "../src/memory/embedder";
 import { ingestLogs } from "../src/memory/ingest_logs";

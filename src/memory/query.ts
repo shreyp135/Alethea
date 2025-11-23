@@ -1,4 +1,4 @@
-import { memoryClient } from "./mongodb";
+import { memoryClient } from "../utils/mongodb";
 import { getEmbedding } from "./embedder";
 
 export async function findSimilar(text: string, limit = 5): Promise<any[]> {

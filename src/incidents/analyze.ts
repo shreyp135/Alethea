@@ -7,7 +7,7 @@ export function analyzeIncident(events: LogEvent[]) {
 
   for (const evt of events) {
     if (evt.service) services.add(evt.service);
-
+    if (evt.timestamp === null) continue;
     const tl = `${evt.timestamp.toISOString()} - ${evt.level} [${evt.service}] ${evt.message}`;
     timeline.push(tl);
 
