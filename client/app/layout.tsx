@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "Alethea",
   description: "Alethea AI platform",
   icons: {
-    icon: "/icon.png",
+    icon: "/alethea-logo-icon.png",
   },
 };
 
