@@ -6,6 +6,8 @@ import { generateSummary } from "src/utils/summarize_text";
 export async function storeMemory(
   type: string,
   text: string,
+  // userId?: string,
+  // projectId?: string,
   metadata = {}
 ): Promise<string> {
   const summary = await generateSummary(text);
@@ -13,8 +15,10 @@ export async function storeMemory(
 
   await memoryClient.insertOne({
     _id: uuid(),
-    type:type,
+    type: type,
     text,
+    // userId: userId ?? null,
+    // projectId: projectId ?? null,
     summary,
     embedding,
     metadata,
