@@ -1,12 +1,16 @@
 import express from "express";
-import { handlePRWebhook } from "./handler";
+import { handlePRWebhook } from "../../src/pr_analyzer/handler";
+import {memoryClient} from "../../src/utils/mongodb";
 
-const app = express();
-const PORT = process.env.PORT;
+const router = express.Router();
 
-app.use(express.json());
+router.get("/", async (req, res) => {
+  const prs = await memoryClient.find({ type: "pr" }).sort({ createdAt: -1 }).toArray();
+  res.json(prs);
+});
 
-app.post("/webhook", async (req, res) => {
+
+router.post("/webhook", async (req, res) => {
   const payload = req.body;
   const pr = payload.pull_request;
   if (!pr) {
@@ -26,6 +30,5 @@ app.post("/webhook", async (req, res) => {
 
 });
 
-app.listen(PORT, () => {
-  console.log(`Alethea PRA Server is running on port ${PORT}`);
-});
+
+export default router;

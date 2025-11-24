@@ -1,0 +1,40 @@
+import axios from "axios";
+import cors from "cors";
+import express from "express";
+import { connectToMongo } from "../src/utils/mongodb";
+import logsRouter from "./routers/logsRouter";
+import incidentsRouter from "./routers/incidentRouter";
+import chatbotRouter from "./routers/chatRouter";
+import memoryRouter from "./routers/memoryRouter";
+import prRouter from "./routers/prRouter";
+import authRouter from "./routers/authRouter";
+import dotenv from "dotenv";
+dotenv.config();
+
+const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:8000";
+
+export const apiClient = axios.create({
+  baseURL: `${API_BASE_URL}/api`,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+await connectToMongo();
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+app.use("/logs", logsRouter);
+app.use("/incidents", incidentsRouter);
+app.use("/chatbot", chatbotRouter);
+app.use("/memory", memoryRouter);
+app.use("/pr", prRouter);
+app.use("/auth", authRouter);
+
+
+app.listen(process.env.PORT || 8080, () => {
+  console.log(`API Server running on port ${process.env.PORT || 8080}`);
+}
+);

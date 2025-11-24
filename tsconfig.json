@@ -15,6 +15,6 @@
   "ts-node": {
     "esm": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "api/routers/server.ts"],
   "exclude": ["node_modules"]
 }
