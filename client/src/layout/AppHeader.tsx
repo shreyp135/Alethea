@@ -85,21 +85,34 @@ const AppHeader: React.FC = () => {
           </button>
 
           <Link href="/" className="lg:hidden">
-            <Image
-              width={154}
-              height={32}
-              className="dark:hidden"
-              src="./images/logo/logo.svg"
-              alt="Logo"
-            />
-            <Image
-              width={154}
-              height={32}
-              className="hidden dark:block"
-              src="./images/logo/logo-dark.svg"
-              alt="Logo"
-            />
-          </Link>
+<div className="dark:hidden">
+                <div className="flex flex-row items-center justify-center">
+                  <Image
+                    src="/images/logo/alethea-logo-icon.png"
+                    alt="Logo"
+                    width={75}
+                    height={40}
+                  />
+                  <div className="ml-2 text-black font-bold text-2xl tracking-widest">
+                    ALETHEA
+                  </div>
+                </div>
+              </div>
+
+              <div className="hidden dark:block">
+                <div className="flex flex-row items-center justify-center">
+                  <Image
+                    src="/images/logo/alethea-logo-icon.png"
+                    alt="Logo"
+                    width={75}
+                    height={40}
+                  />
+                  <div className="ml-2 text-white font-bold text-2xl tracking-widest">
+                    ALETHEA
+                  </div>
+                </div>
+              </div>    
+                    </Link>
 
           <button
             onClick={toggleApplicationMenu}

@@ -151,7 +151,7 @@ const AppSidebar: React.FC = () => {
                 <div className="flex flex-row items-center justify-between bg-gray-100 dark:bg-gray-700 hover:bg-red-300 dark:hover:bg-red-400 dark:hover:text-white w-full px-3 py-2 rounded-md hover:transition">
                   <div className="flex items-center gap-3">
                     <svg
-                      className="text-black dark:text-gray-300 hover:text-white dark:hover:text-white"
+                      className="text-black dark:text-gray-300  dark:hover:text-white"
                       width="24"
                       height="24"
                       viewBox="0 0 24 24"
