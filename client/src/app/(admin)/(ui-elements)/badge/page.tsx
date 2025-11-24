@@ -5,12 +5,10 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Next.js Badge | TailAdmin - Next.js Dashboard Template",
+  title: "Alethea",
   description:
-    "This is Next.js Badge page for TailAdmin - Next.js Tailwind CSS Admin Dashboard Template",
-  // other metadata
+    "Alethea AI Bug Tracking Application",
 };
-
 export default function BadgePage() {
   return (
     <div>

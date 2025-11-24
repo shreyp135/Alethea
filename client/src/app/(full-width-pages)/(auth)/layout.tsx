@@ -22,15 +22,18 @@ export default function AuthLayout({
               <GridShape />
               <div className="flex flex-col items-center max-w-xs">
                 <Link href="/" className="block mb-4">
+                <div className="flex flex-row items-center justify-center">
                   <Image
-                    width={231}
+                    width={98 }
                     height={48}
-                    src="./images/logo/auth-logo.svg"
+                    src="/images/logo/alethea-logo-icon.png"
                     alt="Logo"
                   />
+                  <div className="text-4xl text-white items-center align-middle">ALETHEA</div>
+                  </div>
                 </Link>
-                <p className="text-center text-gray-400 dark:text-white/60">
-                  Free and Open-Source Tailwind CSS Admin Dashboard Template
+                <p className="text-center ml-4 text-gray-400 dark:text-white/60">
+                  Every bug has a story. Alethea tells it
                 </p>
               </div>
             </div>
