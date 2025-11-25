@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation";
 
 export default function HomePage() {
 
-    const [token, setToken] = useState<string | null>(null);
+  // start as `undefined` (unknown) so we can distinguish
+  // "not checked yet" from "checked and no token" (null)
+  const [token, setToken] = useState<string | null | undefined>(undefined);
     const router = useRouter();
   
     useEffect(() => {
@@ -21,7 +23,8 @@ export default function HomePage() {
     }, [router]);
   
     // don't render layout until token check runs
-    if (token === null) return null;
+    // (we only block render while token is `undefined`)
+    if (token === undefined) return null;
   
 
   
