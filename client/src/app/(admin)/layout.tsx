@@ -5,6 +5,9 @@ import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";
 import Backdrop from "@/layout/Backdrop";
 import React from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function AdminLayout({
   children,
@@ -12,6 +15,23 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+
+  const [token, setToken] = useState<string | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const t = localStorage.getItem("alethea_access");
+    setToken(t);
+
+    // redirect only after token is known
+    if (!t) {
+      router.push("/signin?error=auth");
+    }
+  }, [router]);
+
+  // don't render layout until token check runs
+  if (token === null) return null;
+  
 
   // Dynamic class for main content margin based on sidebar state
   const mainContentMargin = isMobileOpen

@@ -4,9 +4,12 @@ import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
 import { EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
+
 
 export default function SignInForm() {
     const [email, setEmail] = useState("");
@@ -14,6 +17,13 @@ export default function SignInForm() {
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
+    useEffect(() => {
+    if (error === "auth") {
+      toast.error("Please sign in to access Alethea");
+    }
+  }, [error]);
 
   async function handleSubmit(e: any) {
     e.preventDefault();
@@ -165,6 +175,10 @@ export default function SignInForm() {
           </div>
         </div>
       </div>
+      <Toaster position="top-center" />
+
     </div>
+
+
   );
 }

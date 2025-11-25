@@ -10,7 +10,6 @@ export const metadata: Metadata = {
   description: "Alethea AI Bug Tracking Application",
 };
 
-
 const outfit = Outfit({
   subsets: ["latin"],
 });
