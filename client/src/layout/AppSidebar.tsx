@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
+import { useEffect, useState } from "react";
 
 import {
   GridIcon,
@@ -38,8 +39,8 @@ const AppSidebar: React.FC = () => {
   const isActive = useCallback((path: string) => path === pathname, [pathname]);
 
   const handleLogout = () => {
-    // implement logout flow here (clear auth, redirect, etc.)
-    console.log("logout clicked");
+    localStorage.removeItem("alethea_access");
+    window.location.href = "/signin";
   };
 
   const renderMenuItems = (items: NavItem[]) => (
@@ -64,6 +65,12 @@ const AppSidebar: React.FC = () => {
     </ul>
   );
 
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const t = localStorage.getItem("alethea_access");
+    setToken(t);
+  }, []);
   return (
     <aside
       className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
@@ -141,7 +148,9 @@ const AppSidebar: React.FC = () => {
             </div>
 
             {/* Logout Section */}
-            <div className="w-full">
+            {token && (
+            <div>
+              <div className="w-full">
               <button
                 type="button"
                 onClick={handleLogout}
@@ -177,6 +186,9 @@ const AppSidebar: React.FC = () => {
                 </div>
               </button>
             </div>
+
+            </div>)  
+            }
           </div>
         </nav>
 

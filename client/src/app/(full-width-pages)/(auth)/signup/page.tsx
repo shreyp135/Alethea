@@ -1,12 +1,21 @@
+"use client"
 import SignUpForm from "@/components/auth/SignUpForm";
-import { Metadata } from "next";
+import { useRouter } from "next/navigation";
+import { useState,useEffect } from "react";
 
-export const metadata: Metadata = {
-  title: "Alethea",
-  description: "Alethea AI Bug Tracking Application",
-  // other metadata
-};
 
 export default function SignUp() {
+    const router = useRouter();
+    const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const t = localStorage.getItem("alethea_access");
+    setToken(t);
+  }, []);
+
+    if(token){
+      router.push("/");
+    }
+  
   return <SignUpForm />;
 }

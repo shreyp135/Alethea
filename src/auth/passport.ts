@@ -2,7 +2,7 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Strategy as GitHubStrategy } from "passport-github2";
-import { findOrCreateOAuthUser } from "./users.js";
+import { findOrCreateOAuthUser } from "./users";
 
 export function initPassport() {
   passport.serializeUser((user: any, done) => done(null, user._id));
@@ -42,7 +42,7 @@ export function initPassport() {
         clientSecret: process.env.GITHUB_CLIENT_SECRET!,
         callbackURL: process.env.GITHUB_CALLBACK_URL!,
       },
-      async (accessToken, refreshToken, profile, done) => {
+      async (accessToken:any, refreshToken:any, profile:any, done:any) => {
         try {
           const user = await findOrCreateOAuthUser({
             provider: "github",

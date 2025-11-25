@@ -23,7 +23,16 @@ export const apiClient = axios.create({
 await connectToMongo();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+  } 
+));
+// app.options("*", cors());
+
+
 app.use(express.json());
 
 app.use("/logs", logsRouter);
@@ -31,7 +40,7 @@ app.use("/incidents", incidentsRouter);
 app.use("/chatbot", chatbotRouter);
 app.use("/memory", memoryRouter);
 app.use("/pr", prRouter);
-app.use("/auth", authRouter);
+app.use("/api/auth", authRouter);
 
 
 app.listen(process.env.PORT || 8080, () => {

@@ -1,15 +1,35 @@
 "use client";
-import Checkbox from "@/components/form/input/Checkbox";
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
-import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
+import { EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
 import React, { useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function SignInForm() {
+    const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+  const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+
+  async function handleSubmit(e: any) {
+    e.preventDefault();
+    try{
+    const response = await axios.post('http://localhost:8080/api/auth/signin', {
+      email: email,
+      password: pass
+    });
+    localStorage.setItem("alethea_access", response.data.access);
+      router.push("/");
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  }
+
+
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
       {/* <div className="w-full max-w-md sm:pt-10 mx-auto mb-5">
@@ -33,6 +53,7 @@ export default function SignInForm() {
           </div>
           <div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
+              <a href="http://localhost:8080/api/auth/google" > 
               <button className="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
                 <svg
                   width="20"
@@ -60,10 +81,13 @@ export default function SignInForm() {
                 </svg>
                 Sign in with Google
               </button>
+              </a>
+              <a href="http://localhost:8080/api/auth/github" >
               <button className="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#6b7280" d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>         
                         Sign in with Github
               </button>
+              </a>
             </div>
             <div className="relative py-3 sm:py-5">
               <div className="absolute inset-0 flex items-center">
@@ -81,7 +105,7 @@ export default function SignInForm() {
                   <Label>
                     Email <span className="text-error-500">*</span>{" "}
                   </Label>
-                  <Input placeholder="info@gmail.com" type="email" />
+                  <Input defaultValue={email} onChange={(e) => setEmail(e.target.value)} placeholder="info@mail.com" type="email" />
                 </div>
                 <div>
                   <Label>
@@ -89,6 +113,7 @@ export default function SignInForm() {
                   </Label>
                   <div className="relative">
                     <Input
+                      defaultValue={pass} onChange={(e) => setPass(e.target.value)}
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
                     />
@@ -119,9 +144,9 @@ export default function SignInForm() {
                   </Link> */}
                 </div>
                 <div>
-                  <Button className="w-full" size="sm">
-                    Sign in
-                  </Button>
+                  <button type="submit" onClick={handleSubmit} className="disabled:bg-gray-600 flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
+                    Sign In
+                  </button>
                 </div>
               </div>
             </form>

@@ -1,11 +1,20 @@
-import SignInForm from "@/components/auth/SignInForm";
-import { Metadata } from "next";
+"use client"
 
-export const metadata: Metadata = {
-  title: "Alethea",
-  description: "Alethea AI Bug Tracking Application",
-};
+import SignInForm from "@/components/auth/SignInForm";
+import { useRouter } from "next/navigation";
+import { useState,useEffect } from "react";
 
 export default function SignIn() {
-  return <SignInForm />;
+  const router = useRouter();
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const t = localStorage.getItem("alethea_access");
+    setToken(t);
+  }, []);
+
+  if(token){
+    router.push("/");
+  }
+    return <SignInForm />;
 }

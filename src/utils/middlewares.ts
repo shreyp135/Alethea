@@ -6,6 +6,7 @@ export function sleep(ms: number): Promise<void> {
 // authentication middleware
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+
 export function requireAuth(req: Request & { user?: any }, res: Response, next: NextFunction) {
   const auth = req.headers.authorization;
   if (!auth) return res.status(401).json({ error: "Unauthorized" });
