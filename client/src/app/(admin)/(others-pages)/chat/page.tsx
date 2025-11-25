@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Bot } from "lucide-react";
 import ChatMessage from "@/components/chat/chat-message";
 import ChatInput from "@/components/chat/chat-input";
+import { useRouter } from "next/navigation";
 
 interface Message {
   id: string;
@@ -22,6 +23,23 @@ const mockResponses = [
 ];
 
 const Chat = () => {
+    const [token, setToken] = useState<string | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const t = localStorage.getItem("alethea_access");
+    setToken(t);
+
+    // redirect only after token is known
+    if (!t) {
+      router.push("/signin?error=auth");
+    }
+  }, [router]);
+
+  // don't render layout until token check runs
+  if (token === null) return null;
+  
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",

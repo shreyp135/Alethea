@@ -1,4 +1,6 @@
 import axios from "axios";
+import dotenv from "dotenv";
+dotenv.config();
 import cors from "cors";
 import express from "express";
 import { connectToMongo } from "../src/utils/mongodb";
@@ -8,8 +10,6 @@ import chatbotRouter from "./routers/chatRouter";
 import memoryRouter from "./routers/memoryRouter";
 import prRouter from "./routers/prRouter";
 import authRouter from "./routers/authRouter";
-import dotenv from "dotenv";
-dotenv.config();
 
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:8000";
 

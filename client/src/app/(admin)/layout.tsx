@@ -5,9 +5,8 @@ import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";
 import Backdrop from "@/layout/Backdrop";
 import React from "react";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import toast, { Toaster } from 'react-hot-toast';
 
 export default function AdminLayout({
   children,
@@ -31,7 +30,7 @@ export default function AdminLayout({
 
   // don't render layout until token check runs
   if (token === null) return null;
-  
+
 
   // Dynamic class for main content margin based on sidebar state
   const mainContentMargin = isMobileOpen

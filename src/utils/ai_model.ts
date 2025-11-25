@@ -4,7 +4,12 @@ dotenv.config();
 
 const llama = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.ML_TOKEN,
+  apiKey: process.env.OPENROUTER_API_KEY,
+    defaultHeaders: {
+    "HTTP-Referer": process.env.FRONTEND_URL,
+    "X-Title": "Alethea",
+  },
+
 });
 
 export async function generateAiResponse(prompt: string): Promise<string> {
