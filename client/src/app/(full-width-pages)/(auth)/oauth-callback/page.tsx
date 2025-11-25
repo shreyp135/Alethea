@@ -8,7 +8,7 @@ export default function OAuthCallback() {
 
   useEffect(() => {
     const access = params.get("access");
-    if (access ) {
+    if (access) {
       localStorage.setItem("alethea_access", access);
       router.push("/");
     } else {

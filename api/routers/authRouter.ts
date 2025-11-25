@@ -15,7 +15,7 @@ router.get("/google/callback", passport.authenticate("google", { session: false 
   // user is in req.user
   const user = req.user;
   const access = signAccessToken({ sub: user._id });
-  res.redirect(`${process.env.FRONTEND_URL}/auth/oauth-callback?access=${access}`);
+  res.redirect(`${process.env.FRONTEND_URL}/oauth-callback?access=${access}`);
 });
 
 // --- GitHub OAuth
@@ -23,7 +23,7 @@ router.get("/github", passport.authenticate("github", { scope: ["user:email"] })
 router.get("/github/callback", passport.authenticate("github", { session: false }), async (req: any, res) => {
   const user = req.user;
   const access = signAccessToken({ sub: user._id });
-  res.redirect(`${process.env.FRONTEND_URL}/auth/oauth-callback?access=${access}`);
+  res.redirect(`${process.env.FRONTEND_URL}/oauth-callback?access=${access}`);
 });
 
 // --- Local signup

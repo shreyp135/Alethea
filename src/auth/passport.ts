@@ -1,16 +1,19 @@
 // src/auth/passportSetup.ts
 import passport from "passport";
+import type { Profile } from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Strategy as GitHubStrategy } from "passport-github2";
 import { findOrCreateOAuthUser } from "./users";
 
 export function initPassport() {
   passport.serializeUser((user: any, done) => done(null, user._id));
+
   passport.deserializeUser(async (id: string, done) => {
-    // not used with JWT, but keep for completeness
+    // not used with JWT but kept for compatibility
     done(null, { id });
   });
 
+   // GOOGLE STRATEGY (Correct)
   passport.use(
     new GoogleStrategy(
       {
@@ -27,9 +30,10 @@ export function initPassport() {
             name: profile.displayName,
             avatar: profile.photos?.[0]?.value,
           });
-          done(null, user);
+
+          return done(null, user);
         } catch (err) {
-          done(err as any);
+          return done(err as any);
         }
       }
     )
@@ -42,7 +46,8 @@ export function initPassport() {
         clientSecret: process.env.GITHUB_CLIENT_SECRET!,
         callbackURL: process.env.GITHUB_CALLBACK_URL!,
       },
-      async (accessToken:any, refreshToken:any, profile:any, done:any) => {
+
+      async (accessToken: string, refreshToken: string, profile: Profile, done: any) => {
         try {
           const user = await findOrCreateOAuthUser({
             provider: "github",
@@ -51,9 +56,10 @@ export function initPassport() {
             name: profile.displayName || profile.username,
             avatar: profile.photos?.[0]?.value,
           });
-          done(null, user);
+
+          return done(null, user);
         } catch (err) {
-          done(err as any);
+          return done(err as any);
         }
       }
     )

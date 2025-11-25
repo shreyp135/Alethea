@@ -25,11 +25,11 @@ export async function findOrCreateOAuthUser({ provider, providerId, email, name,
       return await users.findOne({ _id: user._id });
     }
   }
-
+  const fname = name ? name.split(" ")[0] : null;
   const newUser = {
     _id: uuid(),
     email: email ?? null,
-    name: name ?? null,
+    name: fname ?? null,
     avatar: avatar ?? null,
     oauth: { [provider]: { id: providerId, email, name, avatar } },
     projects: [], // user projects
