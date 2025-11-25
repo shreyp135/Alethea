@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -7,14 +8,25 @@ export default function OAuthCallback() {
   const params = useSearchParams();
 
   useEffect(() => {
+    if (!params) return;
+
     const access = params.get("access");
+
     if (access) {
+      // save token
       localStorage.setItem("alethea_access", access);
-      router.push("/");
+
+      // redirect to dashboard/home
+      router.replace("/");
     } else {
-      router.push("/login?error=oauth");
+      // redirect to signin page
+      router.replace("/signin?error=oauth");
     }
   }, [params, router]);
 
-  return <div>Signing you in...</div>;
+  return (
+    <div className="w-full h-screen flex items-center justify-center text-lg">
+      Signing you in...
+    </div>
+  );
 }
