@@ -20,7 +20,7 @@ export default function OAuthCallback() {
       localStorage.setItem("alethea_access", access);
 
       // redirect to dashboard/home
-      router.replace("/");
+      router.replace("/dashboard");
     } else {
       // redirect to signin page
       router.replace("/signin?error=oauth");

@@ -1,20 +1,40 @@
-"use client"
+"use client";
 import React from "react";
 import Image from "next/image";
+import { useState, useEffect } from "react";
 
 export default function Home() {
+    const [token, setToken] = useState<string | null>(null);
   
+    useEffect(() => {
+      const t = localStorage.getItem("alethea_access");
+      setToken(t);
+  
+    }, []);
+  
+    async function handlelogout() {
+      localStorage.removeItem("alethea_access");
+    }
+  
+
+
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-[#031226] to-[#071a33] text-white relative overflow-hidden ">
+    <div className="min-h-screen w-full bg-gradient-to-b from-[#031226] to-[#071a33] text-white relative overflow-hidden">
 
-      {/* Blue Glow Arc (right side) */}
-      <div className="absolute right-0 top-0 w-[800px] h-[800px] bg-gradient-to-br from-blue-400/20 to-transparent blur-3xl opacity-40 pointer-events-none" />
+      {/* Blue Glow Arc (right side) - decorative */}
+      <div
+        className="absolute right-0 top-0 w-[800px] h-[800px] bg-gradient-to-br from-blue-400/20 to-transparent blur-3xl opacity-40 pointer-events-none z-0"
+        aria-hidden
+      />
 
-      {/* Star Grid */}
-      <div className="absolute inset-0 opacity-20 bg-[url('/grid.svg')] bg-cover " />
+      {/* Star Grid (decorative) */}
+      <div
+        className="absolute inset-0 opacity-20 bg-[url('/grid.svg')] bg-cover pointer-events-none z-0"
+        aria-hidden
+      />
 
-      {/* Floating Stars */}
-      <div className="absolute inset-0 ">
+      {/* Floating Stars (decorative) */}
+      <div className="absolute inset-0 pointer-events-none z-0" aria-hidden>
         {[...Array(40)].map((_, i) => (
           <div
             key={i}
@@ -28,66 +48,54 @@ export default function Home() {
         ))}
       </div>
 
-      {/* NAVBAR */}
-      <header className="w-full flex justify-between items-center px-8 py-6">
+      {/* NAVBAR - make sure it's above decorative layers */}
+      <header className="w-full flex justify-between items-center px-8 py-6 relative z-20">
+        <a href="/">
         <div className="flex items-center gap-3">
-          <Image src="/images/logo/alethea-logo-icon.png" alt="logo" width={38} height={38} />
+          <Image src="/images/logo/alethea-logo-icon.png" alt="logo" width={55} height={55} />
           <span className="font-semibold text-xl tracking-widest">ALETHEA</span>
         </div>
+        </a>
+        <a href="/signin">
+        <div onClick={handlelogout} className="flex items-center gap-5">
+          {/* <button className="text-gray-300 hover:text-white cursor-pointer">Log in</button> */}
 
-        {/* <nav className="hidden md:flex items-center gap-8 text-gray-300">
-          <span className="cursor-pointer hover:text-white">Products</span>
-          <span className="cursor-pointer hover:text-white">Resources</span>
-          <span className="cursor-pointer hover:text-white">Pricing</span>
-          <span className="cursor-pointer hover:text-white">Blog</span>
-        </nav> */}
-
-        <div className="flex items-center gap-5">
-          <button className="text-gray-300 hover:text-white">Log in</button>
-
-          <button className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 text-white shadow-lg hover:opacity-90 transition">
-            Try For Free
+          <button className="text-md tracking-wide mt-2 px-4 py-2 rounded-full bg-gradient-to-r from-gray-100 to-blue-200 text-black shadow-lg hover:opacity-90 transition cursor-pointer">
+            {token ? "Logout" : "Login"}
+            
           </button>
         </div>
+        </a>
       </header>
 
-      {/* HERO SECTION */}
-      <section className="w-full flex flex-col items-center text-center px-6 mt-20">
-        {/* New Feature Pill */}
-        {/* <div className="mb-6">
-          <button className="px-5 py-[6px] rounded-full bg-blue-800/40 text-blue-300 border border-blue-700 flex items-center gap-2 text-sm">
-            New feature
-            <span className="text-white/90">Check out the team dashboard →</span>
-          </button>
-        </div> */}
-
+      {/* HERO SECTION - ensure it sits above background */}
+      <section className="w-full flex flex-col items-center text-center px-6 mt-20 relative z-20">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight max-w-5xl">
-          High-performing remote teams.
+          Every bug has a story.
           <br />
-          The future of work.
+          Alethea tells it.
         </h1>
 
         <p className="text-lg md:text-xl text-gray-300 mt-6 max-w-2xl">
-          Powerful, self-serve team engagement tools and analytics. Supercharge
-          your managers & keep employees engaged from anywhere.
-        </p>
+Transform raw logs into clear, human-readable insights and <br/>
+catch risks instantly.
+Spot dangerous PRs before they ever reach production.
+<br/>
+Chat with Alethea to explore past incidents and prevent future failures.  </p>
 
         {/* CTA Button */}
-        <button className="mt-8 px-8 py-3 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg hover:opacity-90 transition text-white font-medium">
-          Try For Free
+        <a href={token ? "/dashboard" : "/signin"}>
+        <button
+          className="mt-8 px-8 py-3 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg hover:opacity-90 transition text-white font-medium cursor-pointer relative z-30"
+          onClick={() => console.log("CTA clicked")}
+        >
+          {token ? "Go to Dashboard" : "Get Started"}
         </button>
+        </a>
 
         {/* TRUSTED BY */}
-        <p className="mt-32 text-gray-400">© Alethea 2025</p>
-
-        {/* <div className="flex flex-wrap justify-center gap-10 mt-6 opacity-80">
-          <span className="text-lg">Boltshift</span>
-          <span className="text-lg">Lightbox</span>
-          <span className="text-lg">FeatherDev</span>
-          <span className="text-lg">GlobalBank</span>
-        </div> */}
+        <p className="mt-36 text-gray-400">© Alethea 2025</p>
       </section>
-
     </div>
   );
 }
