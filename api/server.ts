@@ -35,11 +35,11 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use("/logs", logsRouter);
-app.use("/incidents", incidentsRouter);
-app.use("/chatbot", chatbotRouter);
-app.use("/memory", memoryRouter);
-app.use("/pr", prRouter);
+app.use("/api/logs", logsRouter);
+app.use("/api/incidents", incidentsRouter);
+app.use("/api/chatbot", chatbotRouter);
+app.use("/api/memory", memoryRouter);
+app.use("/api/pr", prRouter);
 app.use("/api/auth", authRouter);
 
 

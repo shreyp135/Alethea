@@ -9,6 +9,11 @@ router.get("/", async (req, res) => {
   res.json(prs);
 });
 
+router.get("/link", async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  res.json({ linked: true });
+});
+
 
 router.post("/webhook", async (req, res) => {
   const payload = req.body;

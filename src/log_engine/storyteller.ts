@@ -14,13 +14,13 @@ Given the following log events and detected anomalies, generate a clear and tech
 Events:
 ${events
   .map(
-    e => `${e.timestamp.toISOString()} ${e.level} [${e.service}] ${e.message}`
+    e => `${e.timestamp ? e.timestamp.toISOString() : "N/A"} ${e.level} [${e.service}] ${e.message}`
   )
   .join("\n")}
 
 Anomalies:
 ${anomalies
-  .map(a => `${a.type} @ ${a.timestamp.toISOString()} → ${a.message}`)
+  .map(a => `${a.type} @ ${a.timestamp ? a.timestamp.toISOString() : "N/A"} → ${a.message}`)
   .join("\n")}
 
 Explain:

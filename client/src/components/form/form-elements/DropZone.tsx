@@ -6,7 +6,11 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 
-const DropzoneComponent: React.FC = () => {
+type Props = {
+  onChange?: (files: File[]) => void;
+};
+
+const DropzoneComponent: React.FC<Props> = ({ onChange }) => {
   const [files, setFiles] = useState<File[]>([]);
 
   const onDrop = (acceptedFiles: File[]) => {
@@ -16,7 +20,8 @@ const DropzoneComponent: React.FC = () => {
       return;
     } else {
           setFiles(acceptedFiles);
-          toast.success(`${acceptedFiles.length} file(s) uploaded successfully`);      
+          toast.success(`${acceptedFiles.length} file(s) uploaded successfully`);
+          if (onChange) onChange(acceptedFiles);
     }
 
   };
@@ -28,7 +33,7 @@ const DropzoneComponent: React.FC = () => {
     },
   });
   return (
-      <div className="transition border border-gray-300 border-dashed cursor-pointer dark:hover:border-brand-500 dark:border-gray-700 rounded-xl hover:border-brand-500 bg-gray-100 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800">
+      <div className="transition border border-gray-300 border-dashed cursor-pointer dark:hover:border-brand-500 dark:border-gray-700 rounded-xl hover:border-brand-500 bg-gray-100 dark:bg-gray-900 hover:bg-gray-100 ">
         <form
           {...getRootProps()}
           className={`dropzone rounded-xl   border-dashed border-gray-300 p-7 lg:p-10
@@ -92,10 +97,12 @@ const DropzoneComponent: React.FC = () => {
       
         </form>
         {files.length > 0 && ( 
-          <div className="p-4 text-gray-500 text-sm bg-gray-50 dark:bg-gray-800 dark:text-gray-400 rounded-b-xl border-t border-gray-200 dark:border-gray-700">
-            * click again above to upload different files
+          <div onClick={() => setFiles([])} className="p-4 text-red-500 text-sm bg-gray-50 dark:bg-gray-800 dark:text-red-400 rounded-b-xl border-t border-gray-200 dark:border-gray-700 hover:underline cursor-pointer text-center">
+            Remove files
           </div>
         )}
+              <Toaster />
+
       </div>
       
   );
