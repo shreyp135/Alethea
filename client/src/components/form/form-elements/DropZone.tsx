@@ -2,25 +2,33 @@
 import React from "react";
 import ComponentCard from "../../common/ComponentCard";
 import { useDropzone } from "react-dropzone";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 const DropzoneComponent: React.FC = () => {
+  const [files, setFiles] = useState<File[]>([]);
+
   const onDrop = (acceptedFiles: File[]) => {
     console.log("Files dropped:", acceptedFiles);
-    // Handle file uploads here
+    if (acceptedFiles.length ==0) {
+      toast.error("Please upload valid .log or .txt files");
+      return;
+    } else {
+          setFiles(acceptedFiles);
+          toast.success(`${acceptedFiles.length} file(s) uploaded successfully`);      
+    }
+
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      "image/png": [],
-      "image/jpeg": [],
-      "image/webp": [],
-      "image/svg+xml": [],
+      ".log": [".log", ".txt"],
     },
   });
   return (
-    <ComponentCard title="Dropzone">
-      <div className="transition border border-gray-300 border-dashed cursor-pointer dark:hover:border-brand-500 dark:border-gray-700 rounded-xl hover:border-brand-500">
+      <div className="transition border border-gray-300 border-dashed cursor-pointer dark:hover:border-brand-500 dark:border-gray-700 rounded-xl hover:border-brand-500 bg-gray-100 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800">
         <form
           {...getRootProps()}
           className={`dropzone rounded-xl   border-dashed border-gray-300 p-7 lg:p-10
@@ -35,7 +43,19 @@ const DropzoneComponent: React.FC = () => {
           {/* Hidden Input */}
           <input {...getInputProps()} />
 
-          <div className="dz-message flex flex-col items-center m-0!">
+          {files.length > 0 ? (<>
+          <div className="">
+            <h4 className="mb-3 font-semibold text-gray-600 text-theme-lg dark:text-white/90">
+              Uploaded Files:
+            </h4>
+            {files.map((file, index) => (
+              <div key={index} className="mb-2 text-gray-800 dark:text-gray-200">
+                - {file.name} - {Math.round(file.size /1024 +1)} KB
+              </div>
+            ))}
+            </div>
+          </>):(<>
+              <div className="dz-message flex flex-col items-center m-0!">
             {/* Icon Container */}
             <div className="mb-[22px] flex justify-center">
               <div className="flex h-[68px] w-[68px]  items-center justify-center rounded-full bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-400">
@@ -57,20 +77,27 @@ const DropzoneComponent: React.FC = () => {
 
             {/* Text Content */}
             <h4 className="mb-3 font-semibold text-gray-800 text-theme-xl dark:text-white/90">
-              {isDragActive ? "Drop Files Here" : "Drag & Drop Files Here"}
+              {isDragActive ? "Drop your Files Here" : "Drag & Drop your files here"}
             </h4>
 
             <span className=" text-center mb-5 block w-full max-w-[290px] text-sm text-gray-700 dark:text-gray-400">
-              Drag and drop your PNG, JPG, WebP, SVG images here or browse
+              Drag and drop your .log or .txt files here or browse
             </span>
 
             <span className="font-medium underline text-theme-sm text-brand-500">
-              Browse File
+              Browse Files
             </span>
           </div>
+          </>)}
+      
         </form>
+        {files.length > 0 && ( 
+          <div className="p-4 text-gray-500 text-sm bg-gray-50 dark:bg-gray-800 dark:text-gray-400 rounded-b-xl border-t border-gray-200 dark:border-gray-700">
+            * click again above to upload different files
+          </div>
+        )}
       </div>
-    </ComponentCard>
+      
   );
 };
 
