@@ -21,7 +21,7 @@ export default function OAuthCallback() {
 
       // redirect to dashboard/home
       router.replace("/dashboard");
-    } else {
+    } else {``
       // redirect to signin page
       router.replace("/signin?error=oauth");
     }

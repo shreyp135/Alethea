@@ -24,10 +24,11 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { icon: <GridIcon />, name: "Dashboard", path: "/" },
-  { icon: <CalenderIcon />, name: "Logs", path: "/logs" },
-  { icon: <UserCircleIcon />, name: "Chat", path: "/chat" },
-  { icon: <ListIcon />, name: "PR-analyzer", path: "/pr-analyzer" },
+  { icon: <GridIcon />, name: "Dashboard", path: "/dashboard" },
+  { icon: <CalenderIcon />, name: "Logs Analyzer", path: "/logs" },
+  { icon: <ListIcon />, name: "PR Analyzer", path: "/pr-analyzer" },
+  { icon: <UserCircleIcon />, name: "Chat with Alethea", path: "/chat" },
+
 ];
 
 const othersItems: NavItem[] = [];
