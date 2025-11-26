@@ -27,7 +27,7 @@ export default function OutageNews() {
         const apiKey = process.env.NEXT_PUBLIC_NEWSDATA_API_KEY;
 
         // Fetch ONLY outage-related tech news
-        // const url = `https://newsdata.io/api/1/latest?apikey=${apiKey}&qInTitle=outage&language=en&category=technology&removeduplicate=1&sort=relevancy`;
+        const url = `https://newsdata.io/api/1/latest?apikey=${apiKey}&qInTitle=outage&language=en&category=technology&removeduplicate=1&sort=relevancy`;
 
         const res = await axios.get(url);
         setNews(res.data.results || []);
