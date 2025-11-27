@@ -24,7 +24,11 @@ It turns chaotic operational data into **clarity, explanations, and warnings bef
 
 Alethea serves as your team’s **central knowledge layer**, helping engineers debug faster, review safer, and ship with confidence.
 
-All installation instructions and setup steps are available in the docs folder in **`installation.md`**.
+All installation instructions and setup steps are available in **`installation.md`** in the docs folder.
+
+---## 🌐 Live Website
+
+Alethea is live and accessible here: **[https://alethea-dev.vercel.app](https://alethea-dev.vercel.app)**
 
 ---
 
@@ -102,10 +106,11 @@ Alethea includes:
 
 All pages are responsive and optimized.
 
+---
 
 ### Architecture and Repository Structure 
-Access it from the docs folder in **`architecture.md`**
 
+Access it from **`architecture.md`** in the docs folder.
 ---
 
 ## ❤️ Note from the Developer
@@ -120,4 +125,4 @@ If you'd like to share suggestions, report issues, or contribute:
 - Create an Issue in the repository  
 - Or reach out directly at **shreyanshpaliwalcmsmn@gmail.com**
 
-Thank you for supporting Alethea’s journey 🫶.
+Thank you for supporting Alethea’s journey 🫶
