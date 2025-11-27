@@ -26,7 +26,9 @@ Alethea serves as your team’s **central knowledge layer**, helping engineers d
 
 All installation instructions and setup steps are available in **`installation.md`** in the docs folder.
 
----## 🌐 Live Website
+---
+
+## 🌐 Live Website
 
 Alethea is live and accessible here: **[https://alethea-dev.vercel.app](https://alethea-dev.vercel.app)**
 
@@ -111,6 +113,7 @@ All pages are responsive and optimized.
 ### Architecture and Repository Structure 
 
 Access it from **`architecture.md`** in the docs folder.
+
 ---
 
 ## ❤️ Note from the Developer
