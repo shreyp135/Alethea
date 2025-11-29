@@ -17,5 +17,4 @@ COPY tsconfig.json ./
 ENV PORT=8080
 EXPOSE 8080
 
-# Start backend with TSX loader
-CMD ["node", "--loader", "tsx", "api/server.ts"]
+CMD ["node", "--import", "tsx", "api/server.ts"]
