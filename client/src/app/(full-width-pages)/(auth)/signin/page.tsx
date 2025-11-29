@@ -2,7 +2,7 @@
 
 import SignInForm from "@/components/auth/SignInForm";
 import { useRouter } from "next/navigation";
-import { useState,useEffect } from "react";
+import { useState,useEffect, Suspense } from "react";
 
 export default function SignIn() {
   const router = useRouter();
@@ -16,5 +16,10 @@ export default function SignIn() {
   if(token){
     router.push("/");
   }
-    return <SignInForm />;
+    return (
+      <Suspense fallback={<div>Loading...</div>}
+      >
+        <SignInForm />
+      </Suspense>
+    )
 }
