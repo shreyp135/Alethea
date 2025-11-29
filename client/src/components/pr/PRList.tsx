@@ -22,7 +22,8 @@ export default function PRList() {
 
   useEffect(() => {
     if (!connected || !repo) return;    
-    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/`, {
+    const repoUrl =  encodeURIComponent(repo.split("/")[1]);
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/${repoUrl}`, {
       params: { repo },
       headers: {
         Authorization: localStorage.getItem("alethea_access") || "",
@@ -35,8 +36,8 @@ export default function PRList() {
 
   if (!connected) {
     return (
-      <div className="p-6 bg-white border rounded-lg shadow-sm">
-        <p className="text-gray-700">
+      <div className="p-6 border rounded-lg shadow-sm">
+        <p className="text-gray-700 dark:text-gray-300">
           Connect a repository to view recent PRs and automatically analyze them.
         </p>
       </div>
@@ -44,11 +45,11 @@ export default function PRList() {
   }
 
   return (
-    <div className="p-6 bg-white border rounded-lg shadow-sm">
-      <h2 className="text-xl font-semibold mb-4">Recent Pull Requests</h2>
+    <div className="p-6  border dark:border-gray-700 rounded-lg shadow-sm">
+      <h2 className="text-xl font-semibold mb-4 dark:text-white">Recent Pull Requests</h2>
 
       {prs.length === 0 ? (
-        <p className="text-gray-600">No PRs found in {repo}.</p>
+        <p className="text-gray-600 dark:text-gray-400">No PRs found in {repo}.</p>
       ) : (
         <div className="space-y-4">
           {prs.map((pr: any) => (

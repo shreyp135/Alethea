@@ -153,7 +153,7 @@ router.post("/disconnect", async (req: any, res) => {
 
 
 
-router.get("/", async (req, res) => {
+router.get("/:repo", async (req, res) => {
 
   const auth = req.headers.authorization;
   if (!auth) return res.status(401).json({ error: "Missing token" });
