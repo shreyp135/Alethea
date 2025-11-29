@@ -59,11 +59,10 @@ router.post("/signin", async (req, res) => {
 
 // --- Get current user
 router.get("/me", async (req, res) => {
-  // accept Authorization header Bearer <token>
   const token = req.headers.authorization;
   if (!token) return res.status(401).json({ error: "Missing token" });
   try {
-    const userId: any = getUserIdFromToken(token);
+    const userId: any = await getUserIdFromToken(token);
     const user = await findUserById(userId);
     if (!user) return res.status(404).json({ error: "User not found" });
     res.json({ user: { _id: user._id, email: user.email, name: user.name, avatar: user.avatar , oauth: user.oauth } });

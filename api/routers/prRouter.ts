@@ -173,14 +173,9 @@ router.get("/:repo", async (req, res) => {
       repo: parsedRepo.split('/')[1],
       state: 'open',
   }); 
-      const formatted = prs.data.map((p: any) => ({
-      number: p.number,
-      title: p.title,
-      user: p.user?.login,
-      html_url: p.html_url,
-    }));
+    
 
-    res.json({prs: formatted});
+    res.json({prs: prs.data});
   } catch (error){
     res.status(500).json({ error: "Failed to fetch pull requests" });
   }
