@@ -3,6 +3,7 @@ import passport from "passport";
 import { initPassport } from "../../src/auth/passport.js";
 import { signAccessToken } from "../../src/auth/jwt.js";
 import { createLocalUser, verifyLocalUser, findUserById } from "../../src/auth/users.js";
+import { getUserIdFromToken } from "../../src/auth/jwt.js";
 
 initPassport();
 
@@ -62,8 +63,8 @@ router.get("/me", async (req, res) => {
   const token = req.headers.authorization;
   if (!token) return res.status(401).json({ error: "Missing token" });
   try {
-    const payload: any = (await import("jsonwebtoken")).verify(token, process.env.JWT_SECRET!);
-    const user = await findUserById(payload.sub);
+    const userId: any = getUserIdFromToken(token);
+    const user = await findUserById(userId);
     if (!user) return res.status(404).json({ error: "User not found" });
     res.json({ user: { _id: user._id, email: user.email, name: user.name, avatar: user.avatar , oauth: user.oauth } });
   } catch {
