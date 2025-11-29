@@ -19,8 +19,10 @@ router.get("/google/callback", passport.authenticate("google", { session: false 
 });
 
 // --- GitHub OAuth
-router.get("/github", passport.authenticate("github", { scope: ["user:email"] }));
-router.get("/github/callback", passport.authenticate("github", { session: false }), async (req: any, res) => {
+router.get("/github", passport.authenticate("github", {     session: false,
+    scope: ["repo", "write:repo_hook", "read:user", "user:email"],
+ }));
+router.get("/github/callback", passport.authenticate("github", { session: false, }), async (req: any, res) => {
   const user = req.user;
   const github = user.oauth.github.id;
   const access = signAccessToken({ sub: user._id });

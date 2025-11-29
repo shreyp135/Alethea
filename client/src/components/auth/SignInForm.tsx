@@ -28,7 +28,7 @@ export default function SignInForm() {
   async function handleSubmit(e: any) {
     e.preventDefault();
     try{
-    const response = await axios.post('http://localhost:8080/api/auth/signin', {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
       email: email,
       password: pass
     });

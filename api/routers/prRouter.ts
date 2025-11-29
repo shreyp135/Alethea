@@ -10,6 +10,30 @@ const octokit = new Octokit({
 
 const router = express.Router();
 
+function parseRepoString(repoRaw:any) {
+  if (!repoRaw || typeof repoRaw !== "string") {
+    throw new Error("Invalid repo string");
+  }
+
+  // remove possible URL prefix and trailing slash
+  let repo = repoRaw
+    .replace(/^https?:\/\/(www\.)?github\.com\//i, "")
+    .replace(/^github\.com\//i, "")
+    .replace(/\/+$/, "");
+
+  const parts = repo.split("/");
+  if (parts.length !== 2) {
+    throw new Error("Invalid repo format. Expected owner/repo");
+  }
+
+  const owner = parts[0].trim();
+  const repoName = parts[1].trim();
+
+  if (!owner || !repoName) throw new Error("Invalid owner or repo name");
+
+  return { owner, repoName };
+}
+
 router.post("/connect", async (req, res) => {
   const { repo } = req.body;
 
@@ -19,29 +43,60 @@ router.post("/connect", async (req, res) => {
   if (!userId) return res.status(401).json({ error: "Invalid token" });
     const users = await getUsersCollection();
 
-  const record = await users.findOne({
-    type: "user",
-    _id: userId,
-  });
+  const record = await users.findOne({_id: userId });
   const githubAccessToken = record?.oauth.github.githubAccessToken;
 
   if (!repo) return res.status(400).json({ error: "Repo is required" });
   if (!githubAccessToken) return res.status(400).json({ error: "GitHub access token is required" });
 
   const octo = new Octokit({ auth: githubAccessToken });
-
+  let webhook;
 
   const [owner, repoName] = repo.split("/");
+  console.log(owner, repoName);
+  owner.trim();
+  repoName.trim();
+  console.log(owner, repoName);
+  console.log("Creating webhook for", repo);
+  console.log("Webhook URL:", process.env.WEBHOOK_URL);
+    try {
+    const response = await octo.request("GET /repos/{owner}/{repo}", {
+      owner,
+      repo: repoName,
+    });
+    console.log("Repo lookup successful:", response.data.full_name);
+  } catch (err) {
+    console.error("Repo lookup failed — token may lack access or repo doesn't exist", {
+      owner,
+      repoName,
+      error: err,
+    });
+    throw err;
+  }
 
-  const webhook = await octo.request("POST /repos/{owner}/{repo}/hooks", {
-    owner,
+//   const hooks = await octo.request("GET /repos/{owner}/{repo}/hooks", {
+//   owner,
+//   repo: repoName
+// });
+// console.log("Existing hooks:", hooks.data);
+
+const userInfo = await octo.request("GET /user");
+console.log("Scopes:", userInfo.headers["x-oauth-scopes"]);
+
+
+
+   webhook = await octo.request("POST /repos/{owner}/{repo}/hooks", {
+    owner: owner,
     repo: repoName,
     config: {
       url: process.env.WEBHOOK_URL,
       content_type: "json",
+      secret: process.env.WEBHOOK_SECRET,
     },
     events: ["pull_request"],
   });
+  console.log("Webhook created:", webhook.data.id);
+
 
 
   await users.updateOne(
@@ -137,7 +192,6 @@ router.get("/repos", async (req: any, res) => {
     const users = await getUsersCollection();
 
   const record = await users.findOne({_id: userId });
-  console.log(record);
   const githubAccessToken = record?.oauth.github.githubAccessToken;
 
   if (!githubAccessToken)

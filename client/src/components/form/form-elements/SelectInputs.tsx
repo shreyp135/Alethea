@@ -26,7 +26,7 @@ export default function SelectInputs({
   return (
       <div className="space-y-6">
         <div>
-          <Label>Select Input</Label>
+          {/* <Label>Select Input</Label> */}
          <div className="relative">
            <Select
             options={options}
