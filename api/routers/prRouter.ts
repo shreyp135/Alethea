@@ -162,14 +162,15 @@ router.get("/:repo", async (req, res) => {
 
   console.log(req.params)
   const {repo} = req.params as { repo: string };
+  const parsedRepo = decodeURIComponent(repo);
   
-  if (!repo) return res.status(400).json({ error: "Repo is required" });
+  if (!parsedRepo) return res.status(400).json({ error: "Repo is required" });
 
   try{
 
     const prs = await octokit.request('GET /repos/{owner}/{repo}/pulls', {
-      owner: repo.split('/')[0],
-      repo: repo.split('/')[1],
+      owner: parsedRepo.split('/')[0],
+      repo: parsedRepo.split('/')[1],
       state: 'open',
   }); 
       const formatted = prs.data.map((p: any) => ({

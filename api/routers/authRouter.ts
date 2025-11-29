@@ -59,14 +59,13 @@ router.post("/signin", async (req, res) => {
 // --- Get current user
 router.get("/me", async (req, res) => {
   // accept Authorization header Bearer <token>
-  const auth = req.headers.authorization;
-  if (!auth) return res.status(401).json({ error: "Missing token" });
-  const [, token] = auth.split(" ");
+  const token = req.headers.authorization;
+  if (!token) return res.status(401).json({ error: "Missing token" });
   try {
     const payload: any = (await import("jsonwebtoken")).verify(token, process.env.JWT_SECRET!);
     const user = await findUserById(payload.sub);
     if (!user) return res.status(404).json({ error: "User not found" });
-    res.json({ user: { _id: user._id, email: user.email, name: user.name, avatar: user.avatar } });
+    res.json({ user: { _id: user._id, email: user.email, name: user.name, avatar: user.avatar , oauth: user.oauth } });
   } catch {
     res.status(401).json({ error: "Invalid token" });
   }

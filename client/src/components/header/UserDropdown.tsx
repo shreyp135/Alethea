@@ -1,12 +1,14 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
+import axios from "axios";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState("");
 
 function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   e.stopPropagation();
@@ -16,6 +18,22 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   function closeDropdown() {
     setIsOpen(false);
   }
+
+  useEffect(() => {
+    const token = localStorage.getItem("alethea_access");
+    if (token) {
+      const response =  axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/me`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      response.then((res) => {
+        if (res && res.data && res.data.user && res.data.user.name) {
+          setName(res.data.user.name);
+        }
+      });
+    }
+  }, []);
   return (
     <div className="relative">
       <button
@@ -31,7 +49,7 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
           />
         </span>
 
-        <span className="block mr-1 font-medium text-theme-sm">Shreyansh</span>
+        <span className="block mr-1 font-medium text-theme-sm">{name}</span>
 
         <svg
           className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
