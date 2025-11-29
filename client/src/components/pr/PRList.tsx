@@ -3,27 +3,31 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-type Props = {
-  isLinked?: boolean;
-  connectedRepo?: string;
-};
 
-export default function PRList({ isLinked = false, connectedRepo = "" }: Props) {
+export default function PRList() {
   const [prs, setPrs] = useState<any[]>([]);
-  const connected = Boolean(isLinked && connectedRepo);
-  const repo = connectedRepo;
+  const [repo, setRepo] = useState<string>("");
+  const [connected, setConnected] = useState<boolean>(false);
 
   useEffect(() => {
     // axios.get("/api/pr-analyzer/status").then((res) => {
     //   setConnected(res.data.connected);
     //   setRepo(res.data.repo || "");
-    // });
+    const r = localStorage.getItem("alethea_github_repo");
+    if (r) {
+      setRepo(r);
+      setConnected(true);
+    }
   }, []);
 
   useEffect(() => {
-    if (!connected) return;
-
-    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/prs?repo=${encodeURIComponent(repo)}`)
+    if (!connected || !repo) return;    
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/}`, {
+      params: { repo },
+      headers: {
+        Authorization: localStorage.getItem("alethea_access") || "",
+      },
+    })
     .then((res) => {
       setPrs(res.data || []);
     });

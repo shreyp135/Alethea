@@ -160,7 +160,9 @@ router.get("/", async (req, res) => {
   const userId = await getUserIdFromToken(auth);
   if (!userId) return res.status(401).json({ error: "Invalid token" });
 
-  const {repo} = req.headers as { repo: string };
+  console.log(req.params)
+  const {repo} = req.params as { repo: string };
+  
   if (!repo) return res.status(400).json({ error: "Repo is required" });
 
   try{

@@ -4,12 +4,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import SelectInputs from "../form/form-elements/SelectInputs";
 
-type Props = {
-  onLinkedChange?: (linked: boolean) => void;
-  onConnectedRepoChange?: (repo: string) => void;
-};
 
-export default function PRConnectPanel({ onLinkedChange, onConnectedRepoChange }: Props) {
+
+export default function PRConnectPanel() {
   const [github_linked, setGithubLinked] = useState(false);
   const [connected, setConnected] = useState(false);
   const [repo, setRepo] = useState("");
@@ -21,7 +18,6 @@ export default function PRConnectPanel({ onLinkedChange, onConnectedRepoChange }
     const accessToken = localStorage.getItem("alethea_access");
     if (githubToken) 
         setGithubLinked(true);
-        if (onLinkedChange) onLinkedChange(true);
     // attempt to load available repos for the user
     const fetchRepos = async () => {
       try {
@@ -59,7 +55,7 @@ export default function PRConnectPanel({ onLinkedChange, onConnectedRepoChange }
       return;
     }
 
-    await axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/connect`,   { repo: repoUrl,  }, {
+    await axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/connect`, { repo: repoUrl,  }, {
       headers: {
         Authorization: localStorage.getItem("alethea_access") || "",
       },
@@ -68,8 +64,7 @@ export default function PRConnectPanel({ onLinkedChange, onConnectedRepoChange }
     setConnected(true);
     setRepo(repoUrl);
     setGithubLinked(true);
-    if (onLinkedChange) onLinkedChange(true);
-    if (onConnectedRepoChange) onConnectedRepoChange(repoUrl);
+    localStorage.setItem("alethea_github_repo", repoUrl);
   };
 
   const disconnectRepo = async () => {
@@ -81,8 +76,6 @@ export default function PRConnectPanel({ onLinkedChange, onConnectedRepoChange }
     setConnected(false);
     setRepo("");
     setGithubLinked(false);
-    if (onLinkedChange) onLinkedChange(false);
-    if (onConnectedRepoChange) onConnectedRepoChange("");
   };
 
 
