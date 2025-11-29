@@ -8,7 +8,8 @@ import PRInstructions from "@/components/pr/PRInstructions";
 
 export default function page() {
     const [token, setToken] = useState<string | null>(null);
-
+    const [isLinked, setIsLinked] = useState<boolean>(false);
+    const [connectedRepo, setConnectedRepo] = useState<string>("");
 
   const router = useRouter();
 
@@ -57,12 +58,12 @@ export default function page() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left side: repo connect / disconnect */}
         <div className="lg:col-span-1">
-          <PRConnectPanel />
+          <PRConnectPanel onLinkedChange={(v) => setIsLinked(v)} onConnectedRepoChange={(r) => setConnectedRepo(r)} />
         </div>
 
         {/* Right side: list of PRs or placeholder */}
         <div className="lg:col-span-2">
-          <PRList />
+          <PRList isLinked={isLinked} connectedRepo={connectedRepo} />
         </div>
       </div>
 

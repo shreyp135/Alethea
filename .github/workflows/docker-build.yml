@@ -12,6 +12,9 @@ permissions:
 env:
   GHCR_REGISTRY: ghcr.io
   GHCR_IMAGE: shreyp135/alethea
+  CLOUD_RUN_SERVICE: alethea-api
+  CLOUD_RUN_REGION: us-central1
+  CONTAINER_URL: shreyp135/alethea:latest
   DOCKERHUB_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/alethea
 
 jobs:
@@ -48,3 +51,21 @@ jobs:
             docker.io/${{ env.DOCKERHUB_IMAGE }}:latest
           cache-from: type=registry,ref=${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE }}:latest
           cache-to: type=inline
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+  steps:
+    - name: Install gcloud CLI
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+    - name: Deploy to Cloud Run
+      run: |
+        gcloud run deploy ${{ env.CLOUD_RUN_SERVICE }} \
+          --image ${{ env.CONTAINER_URL }} \
+          --region ${{ env.CLOUD_RUN_REGION }} \
+          --platform managed \
+          --allow-unauthenticated

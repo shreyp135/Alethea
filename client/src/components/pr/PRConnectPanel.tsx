@@ -3,9 +3,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import SelectInputs from "../form/form-elements/SelectInputs";
-import { access } from "fs";
 
-export default function PRConnectPanel() {
+type Props = {
+  onLinkedChange?: (linked: boolean) => void;
+  onConnectedRepoChange?: (repo: string) => void;
+};
+
+export default function PRConnectPanel({ onLinkedChange, onConnectedRepoChange }: Props) {
   const [github_linked, setGithubLinked] = useState(false);
   const [connected, setConnected] = useState(false);
   const [repo, setRepo] = useState("");
@@ -17,6 +21,7 @@ export default function PRConnectPanel() {
     const accessToken = localStorage.getItem("alethea_access");
     if (githubToken) 
         setGithubLinked(true);
+        if (onLinkedChange) onLinkedChange(true);
     // attempt to load available repos for the user
     const fetchRepos = async () => {
       try {
@@ -62,6 +67,9 @@ export default function PRConnectPanel() {
 
     setConnected(true);
     setRepo(repoUrl);
+    setGithubLinked(true);
+    if (onLinkedChange) onLinkedChange(true);
+    if (onConnectedRepoChange) onConnectedRepoChange(repoUrl);
   };
 
   const disconnectRepo = async () => {
@@ -72,6 +80,9 @@ export default function PRConnectPanel() {
     });
     setConnected(false);
     setRepo("");
+    setGithubLinked(false);
+    if (onLinkedChange) onLinkedChange(false);
+    if (onConnectedRepoChange) onConnectedRepoChange("");
   };
 
 

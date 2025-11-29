@@ -3,10 +3,15 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function PRList() {
-  const [connected, setConnected] = useState(false);
-  const [repo, setRepo] = useState("");
-  const [prs, setPrs] = useState([]);
+type Props = {
+  isLinked?: boolean;
+  connectedRepo?: string;
+};
+
+export default function PRList({ isLinked = false, connectedRepo = "" }: Props) {
+  const [prs, setPrs] = useState<any[]>([]);
+  const connected = Boolean(isLinked && connectedRepo);
+  const repo = connectedRepo;
 
   useEffect(() => {
     // axios.get("/api/pr-analyzer/status").then((res) => {
@@ -18,10 +23,11 @@ export default function PRList() {
   useEffect(() => {
     if (!connected) return;
 
-    axios.get("/api/pr-analyzer/prs").then((res) => {
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/prs?repo=${encodeURIComponent(repo)}`)
+    .then((res) => {
       setPrs(res.data || []);
     });
-  }, [connected]);
+  }, [connected, repo]);
 
   if (!connected) {
     return (
