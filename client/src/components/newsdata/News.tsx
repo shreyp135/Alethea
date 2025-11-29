@@ -31,7 +31,7 @@ export default function OutageNews() {
 
         const res = await axios.get(url);
         setNews(res.data.results || []);
-        const fivenews = (res.data.results || []).slice(0, 5);
+        const fivenews = (res.data.results || []).slice(0, 4);
         setNews(fivenews);
 
       } catch (err) {

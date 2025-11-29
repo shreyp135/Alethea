@@ -4,7 +4,7 @@ import { generatePRStory } from "../pr_analyzer/pr_story";
 import { commentOnPR } from "../pr_analyzer/comment";
 import { storePR } from "src/memory/store";
 
-export async function handlePRWebhook(pr: any, res: any) {
+export async function handlePRWebhook(pr: any) {
   console.log(`Received PR #${pr.number}: ${pr.title}`);
   //   console.log(pr);
   const diff = await getPRDiff(pr);

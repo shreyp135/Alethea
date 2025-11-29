@@ -14,10 +14,14 @@ export default function OAuthCallback() {
     if (!params) return;
 
     const access = params.get("access");
+    const github = params.get("github");
 
     if (access) {
       // save token
       localStorage.setItem("alethea_access", access);
+      if (github) {
+      localStorage.setItem("alethea_github", github);
+      }
 
       // redirect to dashboard/home
       router.replace("/dashboard");

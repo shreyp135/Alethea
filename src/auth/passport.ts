@@ -55,6 +55,9 @@ export function initPassport() {
             email: profile.emails?.[0]?.value,
             name: profile.displayName || profile.username,
             avatar: profile.photos?.[0]?.value,
+            githubUsername: profile.username,
+            githubAccessToken: accessToken,
+
           });
 
           return done(null, user);

@@ -11,6 +11,7 @@ interface SelectProps {
   onChange: (value: string) => void;
   className?: string;
   defaultValue?: string;
+  value?: string;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -19,9 +20,15 @@ const Select: React.FC<SelectProps> = ({
   onChange,
   className = "",
   defaultValue = "",
+  value,
 }) => {
-  // Manage the selected value
-  const [selectedValue, setSelectedValue] = useState<string>(defaultValue);
+  // Manage the selected value (support controlled `value` prop)
+  const [selectedValue, setSelectedValue] = useState<string>(value ?? defaultValue);
+
+  // keep internal state in sync when parent controls value
+  React.useEffect(() => {
+    if (typeof value !== "undefined") setSelectedValue(value);
+  }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;

@@ -6,11 +6,11 @@ import { Metrics } from "../metrics/Metrics";
 
 export default function Dashboard() {
   
-  return(<><div className="grid grid-cols-12 gap-4 md:gap-6">
+  return(<><div className="grid grid-cols-12 gap-4 md:gap-6 mt-6">
       <div className="col-span-12 space-y-6 xl:col-span-12">
         <Metrics  />
       </div>
-      <div className="col-span-12 space-y-6 xl:col-span-12">
+      <div className="col-span-12 space-y-6 xl:col-span-12 mt-2">
             <News />
 
     </div>

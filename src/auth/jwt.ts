@@ -15,3 +15,16 @@ export function verifyAccessToken(token: string) {
     return null;
   }
 }
+
+export async function getUserIdFromToken(token: string): Promise<string | null> {
+  if (!token){ 
+    console.log("Missing token");
+    return null;
+  }
+  console.log(token);
+  const payload: any = jwt.verify(token, JWT_SECRET);
+  const userid = payload.sub;
+
+  const userId = userid.toString();
+  return userId;
+}

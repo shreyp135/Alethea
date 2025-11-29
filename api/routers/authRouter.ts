@@ -22,8 +22,9 @@ router.get("/google/callback", passport.authenticate("google", { session: false 
 router.get("/github", passport.authenticate("github", { scope: ["user:email"] }));
 router.get("/github/callback", passport.authenticate("github", { session: false }), async (req: any, res) => {
   const user = req.user;
+  const github = user.oauth.github.id;
   const access = signAccessToken({ sub: user._id });
-  res.redirect(`${process.env.FRONTEND_URL}/oauth-callback?access=${access}`);
+  res.redirect(`${process.env.FRONTEND_URL}/oauth-callback?access=${access}&github=${github}`);
 });
 
 // --- Local signup

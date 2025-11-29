@@ -9,19 +9,25 @@ export async function getUsersCollection() {
 }
 
 
-
-
 // create or ensure user by OAuth profile
-export async function findOrCreateOAuthUser({ provider, providerId, email, name, avatar }: { provider: string; providerId: string; email?: string | null; name?: string | null; avatar?: string | null }) {
+export async function findOrCreateOAuthUser({ provider, providerId, email, name, avatar, githubAccessToken, githubUsername }: { provider: string; providerId: string; email?: string | null; name?: string | null; avatar?: string | null; githubAccessToken?: string | null; githubUsername?: string | null }) {
   const users = await getUsersCollection();
   let user = await users.findOne({ [`oauth.${provider}.id`]: providerId });
   if (user) return user;
+
+  let oauthData = {};
+  if(provider==='github'){
+    oauthData= { id: providerId, email, name, avatar, githubAccessToken, githubUsername };
+  } else {
+    oauthData= { id: providerId, email, name, avatar };
+  }
+    
 
   // if email exists, link provider
   if (email) {
     user = await users.findOne({ email });
     if (user) {
-      await users.updateOne({ _id: user._id }, { $set: { [`oauth.${provider}`]: { id: providerId, email, name, avatar } } });
+      await users.updateOne({ _id: user._id }, { $set: { [`oauth.${provider}`]: oauthData } });
       return await users.findOne({ _id: user._id });
     }
   }
@@ -31,7 +37,7 @@ export async function findOrCreateOAuthUser({ provider, providerId, email, name,
     email: email ?? null,
     name: fname ?? null,
     avatar: avatar ?? null,
-    oauth: { [provider]: { id: providerId, email, name, avatar } },
+    oauth: { [provider]: oauthData },
     projects: [], // user projects
     createdAt: new Date(),
   };
