@@ -9,6 +9,7 @@ import axios from "axios";
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
 
 function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   e.stopPropagation();
@@ -36,6 +37,11 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
       response.then((res) => {
         if (res && res.data && res.data.user && res.data.user.name) {
           setName(res.data.user.name);
+          if(res.data.user.email){
+            setUsername(res.data.user.email);
+          }else if(res.data.user.oauth.github){
+            setUsername(res.data.user.oauth.github.githubUsername);
+          }
         }
       });
     }
@@ -84,10 +90,10 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
       >
         <div>
           <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-            Shreyansh Paliwal
+            {name}
           </span>
           <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-            shreyanshpaliwal18@gmail.com
+            {username}
           </span>
         </div>
 

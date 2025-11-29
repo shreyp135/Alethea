@@ -146,13 +146,30 @@ router.post("/disconnect", async (req: any, res) => {
   console.log("Attempting webhook delete:", { owner, repoName, webhookId });
 
   try {
-    await octo.request("DELETE /repos/{owner}/{repo}/hooks/{hook_id}", {
+    // Ensure hook id is a number
+    const hookIdNum = Number(webhookId);
+
+    // Fetch existing hooks to confirm and provide better logging
+    const existing = await octo.request("GET /repos/{owner}/{repo}/hooks", {
       owner,
       repo: repoName,
-      hook_id: webhookId,
     });
+    console.log("Existing hooks:", existing.data.map((h: any) => ({ id: h.id, url: h.config?.url })));
 
-    console.log("Webhook deleted successfully");
+    // Try to find hook by id or by matching webhook URL
+    const found = existing.data.find((h: any) => h.id === hookIdNum || h.config?.url === process.env.WEBHOOK_URL);
+
+    if (!found) {
+      console.warn("Webhook not found on repo; nothing to delete");
+    } else {
+      const targetId = found.id;
+      await octo.request("DELETE /repos/{owner}/{repo}/hooks/{hook_id}", {
+        owner,
+        repo: repoName,
+        hook_id: targetId,
+      });
+      console.log("Webhook deleted successfully", targetId);
+    }
   } catch (err: any) {
     console.error("Failed to delete webhook:", err.response?.data || err);
   }
