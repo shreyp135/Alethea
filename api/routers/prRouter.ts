@@ -115,29 +115,35 @@ console.log("Scopes:", userInfo.headers["x-oauth-scopes"]);
 });
 
 router.post("/disconnect", async (req: any, res) => {
-  const repo = req.body.repo;
+  const { repo } = req.body;
   if (!repo) return res.status(400).json({ error: "Repo is required" });
-  
+
   const auth = req.headers.authorization;
   if (!auth) return res.status(401).json({ error: "Missing token" });
+
   const userId = await getUserIdFromToken(auth);
   if (!userId) return res.status(401).json({ error: "Invalid token" });
-    const users = await getUsersCollection();
 
-    const record = await users.findOne({
-    type: "user",
-    _id: userId,
-  });
-  const githubAccessToken = record?.oauth.github.githubAccessToken;
+  const users = await getUsersCollection();
+  const record = await users.findOne({ type: "user", _id: userId });
+
+  const githubAccessToken = record?.oauth?.github?.githubAccessToken;
   const webhookId = record?.prAnalyzer?.webhookId;
+
+  if (!githubAccessToken) {
+    return res.status(400).json({ error: "GitHub account not connected" });
+  }
+  if (!webhookId) {
+    return res.status(400).json({ error: "No webhook found for this user" });
+  }
+
   const octo = new Octokit({ auth: githubAccessToken });
-  let [owner, repoName] = repo.split("/");
-  console.log("Deleting webhook for", repo);
-  console.log("Webhook ID:", webhookId);
-  owner = owner.trim();
-  repoName = repoName.trim();
 
+  const [rawOwner, rawRepo] = repo.split("/");
+  const owner = rawOwner.trim();
+  const repoName = rawRepo.trim();
 
+  console.log("Attempting webhook delete:", { owner, repoName, webhookId });
 
   try {
     await octo.request("DELETE /repos/{owner}/{repo}/hooks/{hook_id}", {
@@ -145,14 +151,17 @@ router.post("/disconnect", async (req: any, res) => {
       repo: repoName,
       hook_id: webhookId,
     });
-  } catch {}
+
+    console.log("Webhook deleted successfully");
+  } catch (err: any) {
+    console.error("Failed to delete webhook:", err.response?.data || err);
+  }
 
   await users.updateOne(
     { _id: userId, type: "user" },
-    {
-      $unset: { "prAnalyzer.connected": "", "prAnalyzer.repo": "", "prAnalyzer.webhookId": "" },
-    }
+    { $unset: { "prAnalyzer.connected": "", "prAnalyzer.repo": "", "prAnalyzer.webhookId": "" } }
   );
+
   res.json({ message: "Repository disconnected." });
 });
 
