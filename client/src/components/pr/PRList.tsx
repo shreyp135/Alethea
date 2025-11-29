@@ -10,21 +10,12 @@ export default function PRList() {
   const [connected, setConnected] = useState<boolean>(false);
 
 useEffect(() => {
-  const token = localStorage.getItem("alethea_access");
-  if (!token) return;
+    const githubRepo = localStorage.getItem("alethea_github_repo");
+    if( githubRepo){
+        setRepo(githubRepo);
+        setConnected(true);
+    }
 
-  axios
-    .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/status`, {
-      headers: { Authorization: token },
-    })
-    .then((res) => {
-      setConnected(res.data.connected);
-      setRepo(res.data.repo || "");
-    })
-    .catch(() => {
-      setConnected(false);
-      setRepo("");
-    });
 }, []);
 
 useEffect(() => {
@@ -54,8 +45,10 @@ useEffect(() => {
   }
 
   return (
-    <div className="p-6  border dark:border-gray-700 rounded-lg shadow-sm">
-      <h2 className="text-xl font-semibold mb-4 dark:text-white">Recent Pull Requests</h2>
+    <div className="p-6 border dark:border-gray-700 rounded-lg shadow-sm">
+      <h2 className="text-xl font-semibold mb-4 dark:text-white">
+        Recent Pull Requests
+      </h2>
 
       {prs.length === 0 ? (
         <p className="text-gray-600 dark:text-gray-400">No PRs found in {repo}.</p>
@@ -67,18 +60,29 @@ useEffect(() => {
               href={pr.html_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="block p-4 border rounded-md hover:bg-gray-50"
+              className="block p-4 border rounded-md hover:bg-gray-50 dark:hover:bg-gray-800"
             >
               <p className="font-medium">#{pr.number} — {pr.title}</p>
-              <p className="text-sm text-gray-600 mt-1">{pr.user}</p>
+
+              {/* FIX: user is an object, not a string */}
+              <div className="flex items-center gap-2 mt-1">
+                <img
+                  src={pr.user?.avatar_url}
+                  alt={pr.user?.login}
+                  className="w-5 h-5 rounded-full"
+                />
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  {pr.user?.login}
+                </span>
+              </div>
             </a>
           ))}
         </div>
       )}
 
       <p className="text-xs text-gray-500 mt-4">
-        Currently only one repo can be displayed in dashboard.  
-        However, the analyzer will still process PRs from ANY connected repos via webhook.
+        Currently only one repo can be displayed in the dashboard.  
+        The analyzer will still process PRs from ANY connected repos via webhook.
       </p>
     </div>
   );

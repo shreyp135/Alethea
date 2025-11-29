@@ -131,7 +131,12 @@ router.post("/disconnect", async (req: any, res) => {
   const githubAccessToken = record?.oauth.github.githubAccessToken;
   const webhookId = record?.prAnalyzer?.webhookId;
   const octo = new Octokit({ auth: githubAccessToken });
-  const [owner, repoName] = repo.split("/");
+  let [owner, repoName] = repo.split("/");
+  console.log("Deleting webhook for", repo);
+  console.log("Webhook ID:", webhookId);
+  owner = owner.trim();
+  repoName = repoName.trim();
+
 
 
   try {

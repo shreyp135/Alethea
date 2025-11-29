@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import SelectInputs from "../form/form-elements/SelectInputs";
+import toast, { ToastBar, Toaster } from "react-hot-toast";
 
 
 
@@ -77,16 +78,21 @@ export default function PRConnectPanel() {
       return;
     }
 
-    await axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/connect`, { repo: repoUrl,  }, {
+    const response = await axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/connect`, { repo: repoUrl,  }, {
       headers: {
         Authorization: localStorage.getItem("alethea_access"),
       },
     });
+    if (response.status === 422) {
+        toast.error("Repository connection failed. Please ensure the repository exists and the GitHub account has access.");
+        return;
+      }
 
     setConnected(true);
     setRepo(repoUrl);
     setGithubLinked(true);
     localStorage.setItem("alethea_github_repo", repoUrl);
+    window.location.reload();
   };
 
   const disconnectRepo = async () => {
@@ -99,6 +105,7 @@ export default function PRConnectPanel() {
     setRepo("");
     setGithubLinked(false);
     localStorage.removeItem("alethea_github_repo");
+    window.location.reload();
   };
 
 
@@ -147,10 +154,11 @@ export default function PRConnectPanel() {
           >
             Link Repository
           </button>
+
         </div>
       )}</>
       )}
-
+        <Toaster position="top-right" reverseOrder={false} />
     </div>
   );
 }
