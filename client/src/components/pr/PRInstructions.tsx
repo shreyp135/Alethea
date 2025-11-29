@@ -13,7 +13,7 @@ export default function PRInstructions() {
         <li>Click <strong>Add Webhook</strong>.</li>
         <li>Set Payload URL to:<br />
           <code className="bg-gray-100 dark:bg-gray-800 p-1 rounded">
-            https://your-backend.com/webhooks/github
+            {process.env.NEXT_PUBLIC_BACKEND_URL}/webhooks/github
           </code>
         </li>
         <li>Select <strong>application/json</strong> for content type.</li>

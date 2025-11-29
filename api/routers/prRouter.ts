@@ -151,29 +151,49 @@ router.post("/disconnect", async (req: any, res) => {
   res.json({ message: "Repository disconnected." });
 });
 
+router.get("/status", async (req, res) => {
+  const token = req.headers.authorization;
+  if (!token) return res.json({ connected: false, repo: "" });
+
+  const userId = await getUserIdFromToken(token);
+  if (!userId) return res.json({ connected: false, repo: "" });
+
+  const users = await getUsersCollection();
+  const user = await users.findOne({ _id: userId });
+
+  return res.json({
+    connected: user?.prAnalyzer?.connected || false,
+    repo: user?.prAnalyzer?.repo || "",
+  });
+});
 
 
-router.get("/:repo", async (req, res) => {
+
+router.get("/fetch/:repo", async (req, res) => {
 
   const auth = req.headers.authorization;
+  console.log("Auth header1:", auth);
   if (!auth) return res.status(401).json({ error: "Missing token" });
   const userId = await getUserIdFromToken(auth);
   if (!userId) return res.status(401).json({ error: "Invalid token" });
+  console.log("User ID from token:", userId);
 
-  console.log(req.params)
   const {repo} = req.params as { repo: string };
+  console.log("Repo param:", repo);
   const parsedRepo = decodeURIComponent(repo);
+  console.log("Parsed repo:", parsedRepo);
   
   if (!parsedRepo) return res.status(400).json({ error: "Repo is required" });
 
   try{
+    console.log("Fetching PRs for repo:", parsedRepo);
 
     const prs = await octokit.request('GET /repos/{owner}/{repo}/pulls', {
       owner: parsedRepo.split('/')[0],
       repo: parsedRepo.split('/')[1],
       state: 'open',
   }); 
-    
+  console.log("PRs fetched:", prs.data.length);
 
     res.json({prs: prs.data});
   } catch (error){
@@ -183,22 +203,30 @@ router.get("/:repo", async (req, res) => {
 
 router.get("/repos", async (req: any, res) => {
   const auth = req.headers.authorization;
+  console.log("Auth header2:", auth);
   if (!auth) return res.status(401).json({ error: "Missing token" });
   const userId = await getUserIdFromToken(auth);
   if (!userId) return res.status(401).json({ error: "Invalid token" });
+  console.log("User ID from token:", userId);
 
-    const users = await getUsersCollection();
+  const users = await getUsersCollection();
+  console.log("Users collection obtained", users);
 
   const record = await users.findOne({_id: userId });
+  console.log("User record:", record);
   const githubAccessToken = record?.oauth.github.githubAccessToken;
 
   if (!githubAccessToken)
     return res.status(400).json({ error: "GitHub is not connected" });
+  console.log("GitHub access token found", githubAccessToken.substring(0, 4) + "...");
 
   const octo = new Octokit({ auth: githubAccessToken });
+  console.log("Octokit instance created");
 
   const repos = await octo.request("GET /user/repos");
+  console.log("Repositories fetched:", repos.data.length);
   const githubId = record?.oauth.github.id;
+  console.log("GitHub user ID:", githubId);
 
   res.json({repos: repos.data, userId: githubId });
 });

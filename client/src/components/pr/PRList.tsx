@@ -9,34 +9,43 @@ export default function PRList() {
   const [repo, setRepo] = useState<string>("");
   const [connected, setConnected] = useState<boolean>(false);
 
-  useEffect(() => {
-    // axios.get("/api/pr-analyzer/status").then((res) => {
-    //   setConnected(res.data.connected);
-    //   setRepo(res.data.repo || "");
-    const r = localStorage.getItem("alethea_github_repo");
-    if (r) {
-      setRepo(r);
-      setConnected(true);
-    }
-  }, []);
+useEffect(() => {
+  const token = localStorage.getItem("alethea_access");
+  if (!token) return;
 
-  useEffect(() => {
-    if (!connected || !repo) return;    
-    const repoUrl =  encodeURIComponent(repo);
-    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/${repoUrl}`, {
-      headers: {
-        Authorization: localStorage.getItem("alethea_access") || "",
-      },
+  axios
+    .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/status`, {
+      headers: { Authorization: token },
     })
     .then((res) => {
-      setPrs(res.data.prs || []);
+      setConnected(res.data.connected);
+      setRepo(res.data.repo || "");
+    })
+    .catch(() => {
+      setConnected(false);
+      setRepo("");
     });
+}, []);
 
-  }, [connected, repo]);
+useEffect(() => {
+  if (!connected || !repo) return;
+
+  const encodedRepo = encodeURIComponent(repo);
+
+  axios
+    .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/fetch/${encodedRepo}`, {
+      headers: { Authorization: localStorage.getItem("alethea_access") || "" },
+    })
+    .then((res) => setPrs(res.data.prs || []))
+    .catch((err) => {
+      console.error("PR fetch error:", err);
+      console.error("Axios response:", err.response?.data);
+    });
+}, [connected, repo]);
 
   if (!connected) {
     return (
-      <div className="p-6 border rounded-lg shadow-sm">
+      <div className="p-6 border dark:border-gray-700 rounded-lg shadow-sm">
         <p className="text-gray-700 dark:text-gray-300">
           Connect a repository to view recent PRs and automatically analyze them.
         </p>

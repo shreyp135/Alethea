@@ -31,23 +31,40 @@ export default function PRConnectPanel() {
             Authorization: accessToken,
           },
         });
-        
-        // expected shape: [{ value, label }]
-        if (res && res.data) {
-        const {repos, userId} = res.data;
 
-            const filteredRepos = repos.filter((r: any) => r.owner.id == userId);
-            const repoOptions = filteredRepos.map((r: any) => ({
-                value: r.full_name,
-                label: r.full_name,
-            }));
-            setRepos(repoOptions);
+        // expected shape: { repos, userId }
+        if (res && res.data) {
+          const { repos: repoList, userId } = res.data;
+          const filteredRepos = Array.isArray(repoList)
+            ? repoList.filter((r: any) => r.owner?.id == userId)
+            : [];
+          const repoOptions = filteredRepos.map((r: any) => ({
+            value: r.full_name,
+            label: r.full_name,
+          }));
+          setRepos(repoOptions);
+          return;
         }
-      } catch (e) {
-        // fallback example repos
+
+        throw new Error("Invalid response from repos API");
+      } catch (err: any) {
+        // show a useful error message in the UI/console to help debugging
+        console.error("Failed to fetch repos:", err);
+        const status = err?.response?.status;
+        const data = err?.response?.data;
+        // fallback example repos and show error label so user sees details
         setRepos([
-          { value: "error finding repos", label: "error finding repos" },
+          { value: "error finding repos", label: `error finding repos${status ? ` (status ${status})` : ""}` },
         ]);
+        try {
+          // lazy import react-hot-toast to avoid adding a hard dependency here if not present
+          const toast = (await import("react-hot-toast")).default;
+          toast.error(`Could not load repos${status ? ` (status ${status})` : ""}`);
+        } catch (e) {
+          // ignore toast errors
+        }
+        // also log response body if available
+        if (data) console.error("Repos API response body:", data);
       }
     };
     fetchRepos();
@@ -62,7 +79,7 @@ export default function PRConnectPanel() {
 
     await axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/connect`, { repo: repoUrl,  }, {
       headers: {
-        Authorization: localStorage.getItem("alethea_access") || "",
+        Authorization: localStorage.getItem("alethea_access"),
       },
     });
 
@@ -75,7 +92,7 @@ export default function PRConnectPanel() {
   const disconnectRepo = async () => {
     await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/disconnect`,{repo:selectedRepo || repo}, {
       headers: {
-        Authorization: localStorage.getItem("alethea_access") || "",
+        Authorization: localStorage.getItem("alethea_access"),
       },
     });
     setConnected(false);
