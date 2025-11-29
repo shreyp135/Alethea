@@ -22,7 +22,7 @@ export default function PRList() {
 
   useEffect(() => {
     if (!connected || !repo) return;    
-    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/}`, {
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/`, {
       params: { repo },
       headers: {
         Authorization: localStorage.getItem("alethea_access") || "",

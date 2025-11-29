@@ -41,6 +41,8 @@ const AppSidebar: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("alethea_access");
+      localStorage.removeItem("alethea_github");
+      localStorage.removeItem("alethea_github_repo");
     window.location.href = "/signin";
   };
 
