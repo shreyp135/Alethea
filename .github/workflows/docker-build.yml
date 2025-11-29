@@ -9,7 +9,7 @@ on:
   
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: shrep135/alethea
 
 jobs:
   build:
@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
