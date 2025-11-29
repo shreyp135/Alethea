@@ -16,8 +16,13 @@ export default function PRConnectPanel() {
   useEffect(() => {
     const githubToken = localStorage.getItem("alethea_github");
     const accessToken = localStorage.getItem("alethea_access");
+    const githubRepo = localStorage.getItem("alethea_github_repo");
     if (githubToken) 
         setGithubLinked(true);
+    if( githubRepo){
+        setRepo(githubRepo);
+        setConnected(true);
+    }
     // attempt to load available repos for the user
     const fetchRepos = async () => {
       try {
