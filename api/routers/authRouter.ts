@@ -62,11 +62,18 @@ router.get("/me", async (req, res) => {
   const token = req.headers.authorization;
   if (!token) return res.status(401).json({ error: "Missing token" });
   try {
-    const userId: any = await getUserIdFromToken(token);
+    const userId = await getUserIdFromToken(token); // <- await is crucial
+    if (!userId) {
+      return res.status(402).json({ error: "Invalid token" , token: token });
+    }
+
     const user = await findUserById(userId);
-    if (!user) return res.status(404).json({ error: "User not found" });
-    res.json({ user: { _id: user._id, email: user.email, name: user.name, avatar: user.avatar , oauth: user.oauth } });
-  } catch {
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+  } 
+      res.json({ user: { _id: user._id, email: user.email, name: user.name, avatar: user.avatar , oauth: user.oauth } });
+  }
+  catch {
     res.status(401).json({ error: "Invalid token" });
   }
 });

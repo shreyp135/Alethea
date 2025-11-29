@@ -29,8 +29,9 @@ export default function PRList() {
       },
     })
     .then((res) => {
-      setPrs(res.data || []);
+      setPrs(res.data.prs || []);
     });
+
   }, [connected, repo]);
 
   if (!connected) {

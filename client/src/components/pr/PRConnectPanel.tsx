@@ -81,6 +81,7 @@ export default function PRConnectPanel() {
     setConnected(false);
     setRepo("");
     setGithubLinked(false);
+    localStorage.removeItem("alethea_github_repo");
   };
 
 
