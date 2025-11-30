@@ -140,7 +140,7 @@ function convertIncidentToHTML(text: string) {
           ) : (
             <p className="text-gray-600 dark:text-gray-400">No events detected.</p>
           )}
-                <Toaster position="bottom-right" reverseOrder={false} />
+          <Toaster position="bottom-right" reverseOrder={false} />
 
         </ComponentCard>
       ) : (
