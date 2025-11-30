@@ -14,8 +14,9 @@ useEffect(() => {
     if( githubRepo){
         setRepo(githubRepo);
         setConnected(true);
+        console.log("Connected repo found:", githubRepo);
+        console.log("setting connected to true");
     }
-
 }, []);
 
 useEffect(() => {
@@ -32,7 +33,7 @@ useEffect(() => {
       console.error("PR fetch error:", err);
       console.error("Axios response:", err.response?.data);
     });
-}, [connected, repo]);
+}, [connected]);
 
   if (!connected) {
     return (

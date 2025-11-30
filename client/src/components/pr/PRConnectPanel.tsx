@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import SelectInputs from "../form/form-elements/SelectInputs";
-import toast, { ToastBar, Toaster } from "react-hot-toast";
+import toast, {  Toaster } from "react-hot-toast";
 
 
 
@@ -25,7 +25,7 @@ export default function PRConnectPanel() {
         setConnected(true);
     }
     // attempt to load available repos for the user
-    const fetchRepos = async () => {
+     const fetchRepos = async () => {
       try {
         const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/repos`, {
           headers: {
@@ -68,6 +68,7 @@ export default function PRConnectPanel() {
         if (data) console.error("Repos API response body:", data);
       }
     };
+    if( github_linked)
     fetchRepos();
   }, []);
 

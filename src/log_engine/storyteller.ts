@@ -10,6 +10,7 @@ export async function generateStory(
 You are Alethea, an incident forensics AI.
 
 Given the following log events and detected anomalies, generate a clear and technical incident report.
+but dont include points or numbered lists, just write in paragraphs and for timestamp write in simple format for user.
 
 Events:
 ${events
