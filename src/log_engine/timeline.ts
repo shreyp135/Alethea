@@ -8,6 +8,7 @@ export function buildTimeline(
   anomalies: Anomaly[]
 ): TimelineEntry[] {
   return [...events, ...anomalies].sort(
-    (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
+    (a, b) =>
+      (a.timestamp?.getTime() ?? 0) - (b.timestamp?.getTime() ?? 0)
   );
 }
