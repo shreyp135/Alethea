@@ -97,7 +97,7 @@ function convertIncidentToHTML(text: string) {
   };
 
   return (
-    <div className="mt-8 p-4 md:p-6" >
+    <div className=" p-4 md:p-6" >
       {isResponse ? (
         <ComponentCard title="Analysis Results">
            {story ? ( <>  
@@ -152,7 +152,8 @@ function convertIncidentToHTML(text: string) {
             </div>
 
             <p className="text-gray-400 text-sm mt-2">
-              * If both log file(s) and raw log data are provided, raw text will be prioritized.
+              * If both log file(s) and raw log data are provided, raw text will be prioritized.<br/>
+              *This data is not saved with us due to privacy reasons, on refreshing the page it will be lost.
             </p>
           </ComponentCard>
 

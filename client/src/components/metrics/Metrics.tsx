@@ -33,7 +33,7 @@ export const Metrics = () => {
         <div className="flex items-center justify-between ">
           <div className="flex flex-col items-center justify-center">
             <div className="text-lg text-gray-500 dark:text-gray-400">
-              Incidents
+              Anomalies
             </div>
             <div className="mt-2 ml-1 font-bold text-[#145FC0] text-title-sm dark:text-white/90">
               3,782
@@ -51,7 +51,7 @@ export const Metrics = () => {
         <div className="flex items-center justify-between ">
           <div className="flex flex-col items-center justify-center">
             <div className="text-lg text-gray-500 dark:text-gray-400">
-              Log Files 
+              Logs 
             </div>
             <div className="mt-2 ml-1 font-bold text-[#145FC0] text-title-sm dark:text-white/90">
               3,782

@@ -14,7 +14,7 @@ export default function ChatInput({ onSend, isLoading }: { onSend: (t: string) =
   return (<>
     <div className="border-t dark:border-gray-800 px-6 pt-6 flex gap-3">
       <input disabled={isLoading}
-        className="flex-1 justify-center items-center align-middle border rounded-lg px-4 py-2 outline-none bg-white dark:bg-gray-800 dark:text-white"
+        className="flex-1 border-blue-500 justify-center items-center align-middle border rounded-lg px-4 py-2 outline-none bg-white dark:bg-gray-800 dark:text-white"
         placeholder="Ask Alethea anything about logs, PRs, or incidents…"
         value={text}
         type="text"

@@ -7,10 +7,10 @@ router.post("/", async (req, res) => {
   const { question } = req.body;
   console.log("Received question:", question);
   
-  // const result = await chatWithAlethea(question);
+  const result = await chatWithAlethea(question);
   
-  await new Promise(resolve => setTimeout(resolve, 3000)); // Simulate delay
-  const result = { answer: "This is a placeholder answer." };
+  // await new Promise(resolve => setTimeout(resolve, 3000)); // Simulate delay
+  // const result = { answer: "This is a placeholder answer." };
   
   res.json(result);
 });

@@ -5,28 +5,55 @@ import ChatInput from "./chatInput";
 import axios from "axios";
 
 export default function ChatContainer() {
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      content: "Hello! How can I help you debug today?",
-      id: 1,
-    },
-  ]);
-
+  const [messages, setMessages] = useState<any[]>([]);
+  const [name, setName] = useState("User");
   const [loading, setLoading] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
+
+  // Load user name + initial greeting
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const token = localStorage.getItem("alethea_access");
+
+        if (token) {
+          const res = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/me`,
+            { headers: { Authorization: token } }
+          );
+
+          if (res.data?.user?.name) {
+            setName(res.data.user.name);
+          }
+        }
+      } catch (err) {
+        console.error("User load error:", err);
+      }
+
+      // Now set greeting AFTER name is fetched
+      setMessages([
+        {
+          role: "assistant",
+          content: `Hello ${name}! I'm Alethea. How can I help you today?`,
+          id: Date.now(),
+        },
+      ]);
+    };
+
+    loadUser();
+  }, [name]);
 
   // Auto-scroll whenever messages update
   useEffect(() => {
     if (!chatRef.current) return;
     setTimeout(() => {
       chatRef.current!.scrollTop = chatRef.current!.scrollHeight;
-    }, 50);
+    }, 30);
   }, [messages]);
 
-  // Handle sending new user messages
+  // Send message to backend
   const sendMessage = async (text: string) => {
-    // Add user message immediately
+    // Add user's message
     setMessages((prev) => [
       ...prev,
       { role: "user", content: text, id: Date.now() },
@@ -49,7 +76,7 @@ export default function ChatContainer() {
         },
       ]);
     } catch (err) {
-      console.error("Chat fetch error:", err);
+      console.error(err);
       setMessages((prev) => [
         ...prev,
         {
@@ -67,28 +94,23 @@ export default function ChatContainer() {
     <div className="flex-1">
       <div
         className="h-[77vh] overflow-auto [&::-webkit-scrollbar]:hidden p-8"
-        id="chatbox"
         ref={chatRef}
       >
         {messages.map((msg) => (
           <ChatMessage
             key={msg.id}
-            role={msg.role as "assistant" | "user"}
+            role={msg.role}
             content={msg.content}
           />
         ))}
       </div>
 
-      {/* Loading Indicator */}
       {loading ? (
         <div className="p-4 text-center text-gray-500 dark:text-gray-400">
           Alethea is typing...
         </div>
       ) : (
-        <ChatInput
-          isLoading={loading}
-          onSend={sendMessage}
-        />
+        <ChatInput isLoading={loading} onSend={sendMessage} />
       )}
     </div>
   );
