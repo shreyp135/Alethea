@@ -1,25 +1,71 @@
 "use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ChatMessage from "./chatMessage";
 import ChatInput from "./chatInput";
+import axios from "axios";
 
 export default function ChatContainer() {
-
-  const [messages, setMessages] = useState([
+    const [messages, setMessages] = useState([
     {
       role: "assistant" ,
-      content: "Hello Shrey! How can I help you debug today?",
+      content: "Hello! How can I help you debug today?",
       id: 1,
     },
   ]);
+  const [mes,setMes] = useState("");
+
+
+  useEffect(() => {
+    const scrollToBottom = (timeout: number = 0) => {
+      const container = document.getElementById("chatbox");
+      if (container) {
+        setTimeout(() => {
+          container.scrollTop = container.scrollHeight;
+        }, timeout);
+      }
+    };
+
+    const message = messages[messages.length - 1];
+    setMes(message.content);
+
+    if (message.role === "user") {
+      const fetchResponse = async () => {
+        try {
+          const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/chat`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ question: message.content }),
+            }
+          );
+          const data = await res.data;
+          setMessages((prev) => [
+            ...prev,
+            { role: "assistant", content: data.answer, id: Date.now() },
+          ]);
+          scrollToBottom(100);
+        } catch (err) {
+          console.error("Chat fetch error:", err);
+        }
+    }
+    fetchResponse();
+  }
+    scrollToBottom();
+    setMes("");
+
+  }, [messages]);
+  
+
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 min-w-0">
+    <div className="flex-1 ">
       {/* Header */}
 
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4 min-h-0">
+      <div className="h-[77vh] overflow-auto [&::-webkit-scrollbar]:hidden p-8" id="chatbox">
         {messages.map((msg) => (
           <ChatMessage key={msg.id} role={msg.role as "assistant" | "user"} content={msg.content} />
         ))}

@@ -5,7 +5,10 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
   const { question } = req.body;
-  const result = await chatWithAlethea(question);
+  console.log("Received question:", question);
+  
+  // const result = await chatWithAlethea(question);
+  const result = { answer: "This is a placeholder answer." };
   res.json(result);
 });
 

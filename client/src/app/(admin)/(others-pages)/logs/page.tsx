@@ -97,12 +97,12 @@ function convertIncidentToHTML(text: string) {
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-8 p-4 md:p-6" >
       {isResponse ? (
         <ComponentCard title="Analysis Results">
            {story ? ( <>  
            <div>
-              <h3 className="text-lg font-medium mb-3 dark:text-white">Generated Story</h3>
+              <h3 className="text-lg font-medium dark:text-white">Generated Story</h3>
                 <div
                   dangerouslySetInnerHTML={{ __html: story }}
                   className="mb-4 text-gray-700 dark:text-gray-300"

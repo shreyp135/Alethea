@@ -50,7 +50,7 @@ export default function page() {
   // }, [token]);
 
   return (
-    <div className="p-8 w-full min-h-screen ">
+    <div className=" p-6 w-full ">
       {/* <h1 className="text-3xl font-semibold mb-6">PR Analyzer</h1> */}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

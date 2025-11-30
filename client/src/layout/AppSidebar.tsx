@@ -180,7 +180,7 @@ const AppSidebar: React.FC = () => {
                     </svg>
 
                     {(isExpanded || isHovered || isMobileOpen) && (
-                      <div className="text-md font-normal dark:text-gray-300 ">Logout</div>
+                      <div className="text-md font-normal dark:text-gray-300 ">Log out</div>
                     )}
                   </div>
 
