@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function ChatInput({ onSend }: { onSend: (t: string) => void }) {
+export default function ChatInput({ onSend, isLoading }: { onSend: (t: string) => void, isLoading: boolean }) {
   const [text, setText] = useState("");
 
   const handleSend = () => {
@@ -13,7 +13,7 @@ export default function ChatInput({ onSend }: { onSend: (t: string) => void }) {
 
   return (<>
     <div className="border-t dark:border-gray-800 px-6 pt-6 flex gap-3">
-      <input
+      <input disabled={isLoading}
         className="flex-1 justify-center items-center align-middle border rounded-lg px-4 py-2 outline-none bg-white dark:bg-gray-800 dark:text-white"
         placeholder="Ask Alethea anything about logs, PRs, or incidents…"
         value={text}
@@ -22,7 +22,7 @@ export default function ChatInput({ onSend }: { onSend: (t: string) => void }) {
         onKeyDown={(e) => e.key === "Enter" && handleSend()}
       />
 
-      <button
+      <button disabled={isLoading}
         onClick={handleSend}
         className="bg-blue-800 hover:bg-blue-700 transition text-white px-4 py-2 rounded-lg"
       >
