@@ -30,7 +30,8 @@ All installation instructions and setup steps are available in **`installation.m
 
 ## 🌐 Live Website
 
-Alethea is live and accessible here: **[https://alethea-dev.vercel.app](https://alethea-dev.vercel.app)**
+Alethea is live and accessible here: **[https://alethea-dev.vercel.app](https://alethea-dev.vercel.app)** <br>
+Backend Server is hosted at Google CLoud Run using dockerhub image
 
 ---
 
