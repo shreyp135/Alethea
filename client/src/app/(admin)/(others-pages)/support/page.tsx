@@ -3,7 +3,7 @@ import React from "react";
 
 export default function SupportPage() {
   return (
-    <div className="min-h-screen w-full  px-6 py-16 flex flex-col items-center">
+    <div className="min-h-screen w-full dark:text-white  px-6 py-16 flex flex-col items-center">
 
       {/* Header */}
       <h1 className="text-4xl md:text-5xl font-bold text-center">

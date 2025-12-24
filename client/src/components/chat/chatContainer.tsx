@@ -6,12 +6,13 @@ import axios from "axios";
 
 export default function ChatContainer() {
   const [messages, setMessages] = useState<any[]>([]);
-  const [name, setName] = useState("User");
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
 
   // Load user name + initial greeting
   useEffect(() => {
+    setLoading(true);
     const loadUser = async () => {
       try {
         const token = localStorage.getItem("alethea_access");
@@ -29,9 +30,8 @@ export default function ChatContainer() {
       } catch (err) {
         console.error("User load error:", err);
       }
-
       // Now set greeting AFTER name is fetched
-      setMessages([
+        setMessages([
         {
           role: "assistant",
           content: `Hello ${name}! I'm Alethea. How can I help you today?`,
@@ -39,8 +39,9 @@ export default function ChatContainer() {
         },
       ]);
     };
-
     loadUser();
+    setLoading(false);
+
   }, [name]);
 
   // Auto-scroll whenever messages update

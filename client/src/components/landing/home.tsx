@@ -14,6 +14,9 @@ export default function Home() {
   
     async function handlelogout() {
       localStorage.removeItem("alethea_access");
+      localStorage.removeItem("alethea_github");
+      localStorage.removeItem("alethea_github_repo");
+      setToken(null);
     }
   
 

@@ -21,9 +21,13 @@ router.get("/google/callback", passport.authenticate("google", { session: false 
 
 // --- GitHub OAuth
 router.get("/github", passport.authenticate("github", {     session: false,
-    scope: ["repo", "write:repo_hook", "read:user", "user:email"],
+    scope: ["repo", "write:repo_hook", "read:user", "user:email" ,"admin:repo_hook"],
  }));
-router.get("/github/callback", passport.authenticate("github", { session: false, }), async (req: any, res) => {
+router.get("/github/callback", passport.authenticate("github", {
+     session: false, 
+     prompt: "consent",
+      scope: ["repo", "write:repo_hook", "admin:repo_hook", "user:email", "read:user"],
+}), async (req: any, res) => {
   const user = req.user;
   const github = user.oauth.github.id;
   const access = signAccessToken({ sub: user._id });
