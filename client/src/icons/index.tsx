@@ -58,7 +58,6 @@ export {
   MoreDotIcon,
   FileIcon,
   GridIcon,
-  AudioIcon,
   VideoIcon,
   BoltIcon,
   PlusIcon,
