@@ -1,4 +1,4 @@
-// tests/test_phase4.ts
+// automated tests for memory components
 import dotenv from "dotenv";
 dotenv.config();
 

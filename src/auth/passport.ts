@@ -1,4 +1,3 @@
-// src/auth/passportSetup.ts
 import passport from "passport";
 import type { Profile } from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
@@ -9,11 +8,10 @@ export function initPassport() {
   passport.serializeUser((user: any, done) => done(null, user._id));
 
   passport.deserializeUser(async (id: string, done) => {
-    // not used with JWT but kept for compatibility
     done(null, { id });
   });
 
-   // GOOGLE STRATEGY (Correct)
+   // Google OAuth Strategy
   passport.use(
     new GoogleStrategy(
       {
@@ -38,7 +36,7 @@ export function initPassport() {
       }
     )
   );
-
+  // GitHub OAuth Strategy
   passport.use(
     new GitHubStrategy(
       {

@@ -6,7 +6,6 @@ import { storePR } from "src/memory/store";
 
 export async function handlePRWebhook(pr: any) {
   console.log(`Received PR #${pr.number}: ${pr.title}`);
-  //   console.log(pr);
   const diff = await getPRDiff(pr);
   const risk = assessRisk(diff);
   const story = await generatePRStory(diff, risk);

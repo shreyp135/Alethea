@@ -7,5 +7,5 @@ export interface Incident {
   rootCause: string;
   timeline: string[];
   summary: string;
-  story: string;   // AI narrative
+  story: string;   
 }

@@ -23,7 +23,7 @@ ${text}
     console.error("Error parsing embedding response:", err);
   }
 
-  // Fallback: generate random vector (safe fallback)
-  console.warn("⚠️ Using fallback random vector (32 dims)");
+  // generate random vector fallback
+  console.warn("Using fallback random vector for embedding.");
   return Array.from({ length: 32 }, () => Math.random() * 2 - 1);
 }
