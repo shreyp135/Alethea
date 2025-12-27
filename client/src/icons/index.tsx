@@ -10,7 +10,6 @@ import ArrowUpIcon from "./arrow-up.svg";
 import ArrowDownIcon from "./arrow-down.svg";
 import FolderIcon from "./folder.svg";
 import VideoIcon from "./videos.svg";
-import AudioIcon from "./audio.svg";
 import GridIcon from "./grid.svg";
 import FileIcon from "./file.svg";
 import DownloadIcon from "./download.svg";
