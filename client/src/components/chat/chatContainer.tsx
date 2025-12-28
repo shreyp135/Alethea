@@ -3,46 +3,51 @@ import { useState, useEffect, useRef } from "react";
 import ChatMessage from "./chatMessage";
 import ChatInput from "./chatInput";
 import axios from "axios";
+import Loader from "../ui/loader/Loader";
 
 export default function ChatContainer() {
   const [messages, setMessages] = useState<any[]>([]);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
+  const [loaderVisible, setLoaderVisible] = useState(false);
 
-  // Load user name + initial greeting
-  useEffect(() => {
-    setLoading(true);
-    const loadUser = async () => {
-      try {
-        const token = localStorage.getItem("alethea_access");
+useEffect(() => {
+  const initializeChat = async () => {
+    setLoaderVisible(true);
+    let currentName = ""; // Use a local variable to avoid waiting for state update
 
-        if (token) {
-          const res = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/me`,
-            { headers: { Authorization: token } }
-          );
+    try {
+      const token = localStorage.getItem("alethea_access");
+      if (token) {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/me`,
+          { headers: { Authorization: token } }
+        );
 
-          if (res.data?.user?.name) {
-            setName(res.data.user.name);
-          }
+        if (res.data?.user?.name) {
+          currentName = res.data.user.name;
+          setName(currentName); // Update state for other parts of the UI
         }
-      } catch (err) {
-        console.error("User load error:", err);
       }
-      // Now set greeting AFTER name is fetched
-        setMessages([
+    } catch (err) {
+      console.error("User load error:", err);
+    } finally {
+      // Set the greeting using the variable we just fetched
+      setMessages([
         {
           role: "assistant",
-          content: `Hello ${name}! I'm Alethea. How can I help you today?`,
+          content: `Hello ${currentName || "there"}! I'm Alethea. How can I help you today?`,
           id: Date.now(),
         },
       ]);
-    };
-    loadUser();
-    setLoading(false);
+      setLoaderVisible(false);
+      setLoading(false);
+    }
+  };
 
-  }, [name]);
+  initializeChat();
+}, []); // Empty dependency array: only run once on mount
 
   // Auto-scroll whenever messages update
   useEffect(() => {
@@ -97,13 +102,23 @@ export default function ChatContainer() {
         className="h-[77vh] overflow-auto [&::-webkit-scrollbar]:hidden p-8"
         ref={chatRef}
       >
-        {messages.map((msg) => (
-          <ChatMessage
-            key={msg.id}
-            role={msg.role}
-            content={msg.content}
-          />
-        ))}
+        {loaderVisible && 
+          <div className="ml-72 mt-16">
+            <Loader />
+          </div>
+        }
+
+        {!loaderVisible && (
+          <>
+            {messages.map((msg) => (
+              <ChatMessage
+                key={msg.id}
+                role={msg.role}
+                content={msg.content}
+              />
+            ))}
+          </>
+        )}
       </div>
 
       {loading ? (

@@ -256,7 +256,7 @@ router.get("/repos", async (req: any, res) => {
   const cache = await redisClient.get(cacheKey);
   if (cache) {
     console.log("Returning cached repos");
-    return res.json({ repos: JSON.parse(cache), userId: record?.oauth.github.id });
+    return res.json(JSON.parse(cache));
   }
 
   const octo = new Octokit({ auth: githubAccessToken });

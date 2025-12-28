@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import SelectInputs from "../form/form-elements/SelectInputs";
 import { Toaster, toast } from "react-hot-toast";
+import Loader from "../ui/loader/Loader";
 
 export default function PRConnectPanel() {
   const [githubLinked, setGithubLinked] = useState(false);
@@ -12,6 +13,7 @@ export default function PRConnectPanel() {
   const [repos, setRepos] = useState<{ value: string; label: string }[]>([]);
   const [selectedRepo, setSelectedRepo] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loaderVisible, setLoaderVisible] = useState(false);
 
   // ----------------------------
   // Load initial states
@@ -37,13 +39,16 @@ export default function PRConnectPanel() {
     if (!accessToken) return;
 
     const fetchRepos = async () => {
+      setLoaderVisible(true);
       try {
+
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/repos`,
           { headers: { Authorization: accessToken } }
         );
 
         const { repos: list, userId } = res.data;
+        // console.log("Fetched repos:", list);
 
         const ownRepos = list
           .filter((r: any) => r.owner?.id == userId)
@@ -53,10 +58,13 @@ export default function PRConnectPanel() {
           }));
 
         setRepos(ownRepos);
+        setLoaderVisible(false);
       } catch (err: any) {
         console.error("Repo fetch error:", err.response?.data || err);
-        toast.error("Failed to load GitHub repos");
+        toast.error("Failed to load GitHub repos")
+        setLoaderVisible(false);
       }
+
     };
 
     fetchRepos();
@@ -66,13 +74,14 @@ export default function PRConnectPanel() {
   // Connect repo
   // ----------------------------
   const connectRepo = async () => {
-    setLoading(true);
     const repoToConnect = selectedRepo || repo;
-
-    if (!repoToConnect) {
+    if (!repoToConnect || repoToConnect.length === 0) {
       toast.error("Select a repository first.");
       return;
     }
+
+    setLoading(true);
+
 
     try {
       await axios.post(
@@ -157,13 +166,14 @@ export default function PRConnectPanel() {
           <p className="text-gray-700 dark:text-gray-400 mb-3">
             Select a repository to connect for PR analysis.
           </p>
-
+          {loaderVisible && <Loader />}
+          {!loaderVisible && (
           <SelectInputs
             options={repos}
             value={selectedRepo}
             onChange={(v) => setSelectedRepo(v)}
             placeholder="Select repository"
-          />
+          />)}
 
           <button
             onClick={connectRepo}
@@ -173,7 +183,7 @@ export default function PRConnectPanel() {
         </div>
       )}
 
-      <Toaster position="top-right" />
+      <Toaster position="bottom-right" />
     </div>
   );
 }

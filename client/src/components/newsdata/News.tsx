@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table";
 import Image from "next/image";
-import Badge from "../ui/badge/Badge";
+import Loader from "../ui/loader/Loader";
 
 interface NewsItem {
   article_id: string;
@@ -23,6 +23,8 @@ export default function OutageNews() {
 
   useEffect(() => {
     const fetchOutageNews = async () => {
+      setLoading(true);
+
       try {
         const apiKey = process.env.NEXT_PUBLIC_NEWSDATA_API_KEY;
 
@@ -33,7 +35,6 @@ export default function OutageNews() {
         setNews(res.data.results || []);
         const fivenews = (res.data.results || []).slice(0, 4);
         setNews(fivenews);
-
       } catch (err) {
         console.error("Failed to fetch outage news:", err);
       } finally {
@@ -42,10 +43,11 @@ export default function OutageNews() {
     };
 
     fetchOutageNews();
+    
   }, []);
   let loadingMessage;
   if (loading) 
-    loadingMessage =  <div className="dark:text-white">Loading outage news…</div>;
+    loadingMessage =<div className="ml-12"> <Loader /></div>;
   let noNewsMessage;
   if (news.length === 0)
     noNewsMessage = <div className="dark:text-white p-6">No relevant news found.</div>;
@@ -54,8 +56,10 @@ export default function OutageNews() {
     <div className="space-y-6">
       <h2 className="text-2xl font-normal ml-2 dark:text-white/90">Recent Tech Outage News</h2>
       {loadingMessage}
+      {!loading && (
             <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
+        
         <div className="min-w-[1102px]">
           <Table>
             {/* Table Header */}
@@ -162,10 +166,12 @@ export default function OutageNews() {
             </TableBody>
           </Table>
                   {!loading && noNewsMessage}
-
         </div>
+
       </div>
+      
     </div>
+    )}
 
       {news.map((item) => (<></>
         // <div
@@ -205,6 +211,7 @@ export default function OutageNews() {
         //   </div>
         // </div>
       ))}
+
     </div>
   );
 }

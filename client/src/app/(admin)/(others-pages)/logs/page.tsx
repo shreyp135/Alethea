@@ -60,8 +60,13 @@ function convertIncidentToHTML(text: string) {
     setStory("");
     setIsResponse(false);
 
+    if (!textData && files.length === 0) {
+      toast.error("Please provide log data via text or file upload.");
+      setIsLoading(false);
+      return;
+    }
     const auth = localStorage.getItem("alethea_access");
-    toast.loading("Please wait for a while we analyze the logs...", { duration: 2000 });
+    toast.loading("Please wait for a while we analyze the logs...", { duration: 7000 });
 
     try {
       let logsPayload = textData.trim();
@@ -140,7 +145,6 @@ function convertIncidentToHTML(text: string) {
           ) : (
             <p className="text-gray-600 dark:text-gray-400">No events detected.</p>
           )}
-          <Toaster position="bottom-right" reverseOrder={false} />
 
         </ComponentCard>
       ) : (
@@ -168,6 +172,8 @@ function convertIncidentToHTML(text: string) {
           </div>
         </div>
       )}
+      <Toaster position="bottom-right" reverseOrder={false} />
+
     </div>
   );
 }
