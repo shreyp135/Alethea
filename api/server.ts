@@ -10,6 +10,7 @@ import chatbotRouter from "./routers/chatRouter";
 import memoryRouter from "./routers/memoryRouter";
 import prRouter from "./routers/prRouter";
 import authRouter from "./routers/authRouter";
+import { redisClient } from "../src/utils/redis";
 
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:8000";
 
@@ -20,6 +21,8 @@ export const apiClient = axios.create({
   },
 });
 
+//datebase and Redis connection
+await redisClient.connect();
 await connectToMongo();
 
 const app = express();
