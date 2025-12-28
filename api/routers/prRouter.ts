@@ -3,6 +3,7 @@ import { handlePRWebhook } from "../../src/pr_analyzer/handler";
 import { Octokit } from "octokit";
 import { getUserIdFromToken } from "../../src/auth/jwt";
 import { getUsersCollection } from "../../src/auth/users";
+import { redisClient } from "../../src/utils/redis";
 
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
@@ -203,30 +204,34 @@ router.get("/status", async (req, res) => {
 router.get("/fetch/:repo", async (req, res) => {
 
   const auth = req.headers.authorization;
-  console.log("Auth header1:", auth);
   if (!auth) return res.status(401).json({ error: "Missing token" });
+
   const userId = await getUserIdFromToken(auth);
   if (!userId) return res.status(401).json({ error: "Invalid token" });
-  console.log("User ID from token:", userId);
 
   const {repo} = req.params as { repo: string };
-  console.log("Repo param:", repo);
   const parsedRepo = decodeURIComponent(repo);
-  console.log("Parsed repo:", parsedRepo);
   
   if (!parsedRepo) return res.status(400).json({ error: "Repo is required" });
 
   try{
-    console.log("Fetching PRs for repo:", parsedRepo);
+    const cacheKey = `prs:${parsedRepo}`;
+    const cache = await redisClient.get(cacheKey);
+    if (cache) {
+      console.log("Returning cached PRs for", parsedRepo);
+      return res.json({prs: JSON.parse(cache)});
+    }
+    console.log("Fetching PRs from GitHub for", parsedRepo);
 
     const prs = await octokit.request('GET /repos/{owner}/{repo}/pulls', {
       owner: parsedRepo.split('/')[0],
       repo: parsedRepo.split('/')[1],
       state: 'open',
   }); 
-  console.log("PRs fetched:", prs.data.length);
+  const response = {prs: prs.data };
+  await redisClient.set(cacheKey, JSON.stringify(response), { EX: 180 });
 
-    res.json({prs: prs.data});
+   return res.json(response);
   } catch (error){
     res.status(500).json({ error: "Failed to fetch pull requests" });
   }
@@ -234,36 +239,36 @@ router.get("/fetch/:repo", async (req, res) => {
 
 router.get("/repos", async (req: any, res) => {
   const auth = req.headers.authorization;
-  console.log("Auth header2:", auth);
   if (!auth) return res.status(401).json({ error: "Missing token" });
+
   const userId = await getUserIdFromToken(auth);
   if (!userId) return res.status(401).json({ error: "Invalid token" });
-  console.log("User ID from token:", userId);
 
   const users = await getUsersCollection();
-  console.log("Users collection obtained", users);
-
   const record = await users.findOne({_id: userId });
-  console.log("User record:", record);
-  const githubAccessToken = record?.oauth.github.githubAccessToken;
 
+  const githubAccessToken = record?.oauth.github.githubAccessToken;
   if (!githubAccessToken)
     return res.status(400).json({ error: "GitHub is not connected" });
   console.log("GitHub access token found", githubAccessToken.substring(0, 4) + "...");
 
-  const octo = new Octokit({ auth: githubAccessToken });
-  console.log("Octokit instance created");
+  const cacheKey = `repos:${userId}`;
+  const cache = await redisClient.get(cacheKey);
+  if (cache) {
+    console.log("Returning cached repos");
+    return res.json({ repos: JSON.parse(cache), userId: record?.oauth.github.id });
+  }
 
+  const octo = new Octokit({ auth: githubAccessToken });
   const repos = await octo.request("GET /user/repos");
-  console.log("Repositories fetched:", repos.data.length);
   const githubId = record?.oauth.github.id;
-  console.log("GitHub user ID:", githubId);
+
+  const response = {repos: repos.data, userId: githubId };
+
+  await redisClient.set(cacheKey, JSON.stringify(response), { EX: 180 });
 
   res.json({repos: repos.data, userId: githubId });
 });
-
-
-
 
 
 router.post("/webhook", async (req, res) => {

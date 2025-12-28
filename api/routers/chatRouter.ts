@@ -1,6 +1,7 @@
 import express from "express";
 import {chatWithAlethea} from "../../src/chatbot/handler"
 
+
 const router = express.Router();
 
 router.post("/", async (req, res) => {
