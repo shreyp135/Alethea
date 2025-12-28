@@ -157,7 +157,7 @@ export default function PRConnectPanel() {
           </p>
           <button
             onClick={disconnectRepo}
-            className="px-4 py-2 bg-gray-500 hover:bg-red-600 text-white rounded-md"
+            className="px-4 py-2 bg-gray-500 hover:bg-red-400 text-white rounded-md"
           >{loading ? "Disconnecting..." : "Disconnect Repository"}
           </button>
         </div>
@@ -166,7 +166,7 @@ export default function PRConnectPanel() {
           <p className="text-gray-700 dark:text-gray-400 mb-3">
             Select a repository to connect for PR analysis.
           </p>
-          {loaderVisible && <Loader />}
+          {loaderVisible && <div className="ml-8"><Loader /></div>}
           {!loaderVisible && (
           <SelectInputs
             options={repos}

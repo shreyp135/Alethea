@@ -219,7 +219,7 @@ router.get("/fetch/:repo", async (req, res) => {
     const cache = await redisClient.get(cacheKey);
     if (cache) {
       console.log("Returning cached PRs for", parsedRepo);
-      return res.json({prs: JSON.parse(cache)});
+      return res.json(JSON.parse(cache));
     }
     console.log("Fetching PRs from GitHub for", parsedRepo);
 

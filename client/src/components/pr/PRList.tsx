@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Loader from "../ui/loader/Loader";
 
 
 export default function PRList() {
   const [prs, setPrs] = useState<any[]>([]);
   const [repo, setRepo] = useState<string>("");
   const [connected, setConnected] = useState<boolean>(false);
+  const [loaderVisible, setLoaderVisible] = useState<boolean>(false);
 
 useEffect(() => {
     const githubRepo = localStorage.getItem("alethea_github_repo");
@@ -23,6 +25,7 @@ useEffect(() => {
   if (!connected || !repo) return;
 
   const encodedRepo = encodeURIComponent(repo);
+  setLoaderVisible(true);
 
   axios
     .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pr/fetch/${encodedRepo}`, {
@@ -32,6 +35,9 @@ useEffect(() => {
     .catch((err) => {
       console.error("PR fetch error:", err);
       console.error("Axios response:", err.response?.data);
+    })
+    .finally(() => {
+      setLoaderVisible(false);
     });
 }, [connected]);
 
@@ -50,7 +56,8 @@ useEffect(() => {
       <h2 className="text-xl font-semibold mb-4 dark:text-white">
         Recent Pull Requests
       </h2>
-
+      {loaderVisible && <div className="ml-8"><Loader /></div>}
+      {!loaderVisible && <>
       {prs.length === 0 ? (
         <p className="text-gray-600 dark:text-gray-400">No PRs found in {repo}.</p>
       ) : (
@@ -65,7 +72,6 @@ useEffect(() => {
             >
               <p className="font-medium">#{pr.number} — {pr.title}</p>
 
-              {/* FIX: user is an object, not a string */}
               <div className="flex items-center gap-2 mt-1">
                 <img
                   src={pr.user?.avatar_url}
@@ -79,11 +85,10 @@ useEffect(() => {
             </a>
           ))}
         </div>
-      )}
+      )}</>}
 
       <p className="text-xs text-gray-500 mt-4">
-        Currently only one repo can be displayed in the dashboard.  
-        The analyzer will still process PRs from ANY connected repos via webhook.
+        Currently only one repo can be displayed in the dashboard although we will still process PRs from ANY connected repos via webhook.
       </p>
     </div>
   );
