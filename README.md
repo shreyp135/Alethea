@@ -19,6 +19,7 @@ AI-powered log intelligence, PR risk analysis, incident memory, and conversation
 - Pull requests  
 - Conversations and queries  
 - User-submitted troubleshooting history  
+- Caching for fast and quick retrieval of data
 
 It turns chaotic operational data into **clarity, explanations, and warnings before failures happen**.
 
@@ -94,6 +95,8 @@ Alethea's architecture allows it to:
 - Build long-term memory  
 - Improve anomaly detection over time  
 - Become more intelligent while isolating user data securely  
+
+- NOTE: Currently this is disabled and a direct workaround is implemented to prevent AI model costs in beta phase.
 
 ---
 
