@@ -56,6 +56,11 @@ export default function PRConnectPanel() {
             value: r.full_name,
             label: r.full_name,
           }));
+        if (ownRepos.length === 0) {
+          toast.error("No repositories found in your GitHub account.");
+          setLoaderVisible(false);
+          return;
+        }
 
         setRepos(ownRepos);
         setLoaderVisible(false);
@@ -67,7 +72,7 @@ export default function PRConnectPanel() {
 
     };
 
-    fetchRepos();
+    if(githubLinked)fetchRepos();
   }, [githubLinked]);
 
   // ----------------------------

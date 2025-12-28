@@ -103,7 +103,7 @@ useEffect(() => {
         ref={chatRef}
       >
         {loaderVisible && 
-          <div className="ml-72 mt-16">
+          <div className="ml-48 mt-12">
             <Loader />
           </div>
         }

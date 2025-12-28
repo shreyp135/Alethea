@@ -39,6 +39,7 @@ useEffect(() => {
     .finally(() => {
       setLoaderVisible(false);
     });
+    setLoaderVisible(false);
 }, [connected]);
 
   if (!connected) {
