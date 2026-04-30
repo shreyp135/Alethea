@@ -14,7 +14,7 @@ const llama = new OpenAI({
 
 export async function generateAiResponse(prompt: string): Promise<string> {
     const response = await llama.chat.completions.create({
-        model: "meta-llama/llama-3.3-70b-instruct:free",
+        model: "google/gemma-4-31b-it:free",
         messages: [{ role: "user", content: prompt }],
     });
     return response.choices[0].message.content?.toString() || "";
