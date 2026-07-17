@@ -9,6 +9,7 @@ import incidentsRouter from "./routers/incidentRouter";
 import chatbotRouter from "./routers/chatRouter";
 import memoryRouter from "./routers/memoryRouter";
 import prRouter from "./routers/prRouter";
+import checkRouter from "./routers/checkRouter";
 import authRouter from "./routers/authRouter";
 import { redisClient } from "../src/utils/redis";
 
@@ -31,7 +32,7 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
-  } 
+  }
 ));
 
 app.use(express.json());
@@ -42,7 +43,7 @@ app.use("/api/chatbot", chatbotRouter);
 app.use("/api/memory", memoryRouter);
 app.use("/api/pr", prRouter);
 app.use("/api/auth", authRouter);
-
+app.use("/api/health", checkRouter);
 
 app.listen(process.env.PORT || 8080, () => {
   console.log(`API Server running on port ${process.env.PORT || 8080}`);
