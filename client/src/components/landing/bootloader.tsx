@@ -140,7 +140,7 @@ export default function BootLoader({
               </div>
 
               <p className="text-sm text-zinc-500">
-                Cold starting backend...
+                Cold starting backend (wait time: 30s)...
               </p>
             </>
           )}
