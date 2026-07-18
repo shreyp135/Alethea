@@ -16,7 +16,7 @@ router.get('/', async (_, res) => {
   }
 });
 
-router.get('redis', async (_, res) => {
+router.get('/redis', async (_, res) => {
   try {
     await redis.ping();
 
